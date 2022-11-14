@@ -1,0 +1,144 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Edu+SA+Beginner&family=Roboto+Slab&display=swap");
+.heading1 {
+  font-family: 'Roboto Slab', serif !important;
+  text-align: center;
+  margin-bottom: 2vw;
+}
+
+#signup {
+  border: 1px solid #f5f5f5;
+  margin: auto;
+  width: 50%;
+  border-radius: 1%;
+  padding: 5% 5% 5% 5%;
+  background: #222222;
+  -webkit-box-shadow: 5px 5px 5px 5px;
+          box-shadow: 5px 5px 5px 5px;
+}
+
+.signup-light {
+  border: 1px solid #333333;
+  margin: auto;
+  width: 50%;
+  border-radius: 1%;
+  padding: 5% 5% 5% 5%;
+  background: #cfcfcf !important;
+}
+
+@media only screen and (max-width: 700px) {
+  #signup {
+    border: 1px solid #f5f5f5;
+    margin: auto;
+    width: 100%;
+  }
+}
+
+.register {
+  width: 100%;
+}
+
+.register:hover {
+  background: #cfcfcf;
+  color: #333333;
+  -webkit-transition: 1s;
+  transition: 1s;
+}
+
+.alr {
+  font-size: 0.9em;
+  text-align: center;
+  margin-left: 25%;
+}
+
+.link1 {
+  margin-left: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.first {
+  margin-top: 10% !important;
+  margin-bottom: 10% !important;
+  text-align: center;
+  text-decoration: none;
+  font-size: 2.5em;
+  width: 100%;
+  display: inline-block;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  filter: alpha(opacity=70);
+  -moz-opacity: 0.7;
+  -khtml-opacity: 0.7;
+  opacity: 0.7;
+  z-index: 100;
+  display: none;
+}
+
+.cnt223 a {
+  text-decoration: none;
+}
+
+.popup {
+  width: 100%;
+  margin: 0 auto;
+  display: none;
+  position: fixed;
+  z-index: 101;
+}
+
+.cnt223 {
+  min-width: 40%;
+  width: 40%;
+  min-height: 100% !important;
+  height: 100% !important;
+  margin: 100px auto;
+  background: #f3f3f3;
+  position: relative;
+  z-index: 103;
+  padding: 15px 35px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 2px 5px #000;
+          box-shadow: 0 2px 5px #000;
+}
+
+.cnt223 p {
+  clear: both;
+  color: #555555;
+  /* text-align: justify; */
+  font-size: 20px;
+  font-family: sans-serif;
+}
+
+.cnt223 p a {
+  color: #d91900;
+  font-weight: bold;
+}
+
+.cnt223 .x {
+  float: left;
+  height: 35px;
+  left: 22px;
+  position: relative;
+  top: -25px;
+  width: 34px;
+}
+
+.cnt223 .x:hover {
+  cursor: pointer;
+}
+
+.cnt223 .close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 30px;
+}
+/*# sourceMappingURL=work.css.map */

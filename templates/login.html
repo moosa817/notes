@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Login  {% endblock %}
+
+{% block content %}
+<div id="signup">
+    <h1 class="heading1">Login</h1>
+    
+    
+    <form method="POST">
+        <div class="mb-2">
+          <label for="exampleInputEmail1" class="form-label">Username/Email</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+        </div>
+        
+        <div class="mb-2">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1">
+        </div>
+     
+          
+      
+        <button type="submit" class="btn btn-primary mb-3 register" id="login">Login</button>
+        
+      </form>
+      <span class="alr">Don't have an account?
+        <a href="/signup" class="link1"> Signup </a></span>
+    </div>
+{% endblock %}
