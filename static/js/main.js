@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $("nav [href]").each(function() {
+    $("nav ul li [href]").each(function() {
         if (this.href == window.location.href) {
             $(this).addClass("active-link");
         }

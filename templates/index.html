@@ -4,6 +4,16 @@
 {% block title %} Notes  {% endblock %}
 
 {% block content %}
-<a href="/signup" class="first">Signup/Login to open your notes </a>
 
+
+{% if not username %}
+<a href="/signup" class="first">Signup/Login to open your notes </a>
+{% endif %}
+
+
+{% if username %}
+yooo u logged 
+
+
+{% endif %}
 {% endblock %}

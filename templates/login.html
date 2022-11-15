@@ -5,18 +5,26 @@
 
 {% block content %}
 <div id="signup">
+
+
+
+  {% if error %}
+  <div class="error-box">
+    {{error}}
+  </div>
+  {% endif %}
     <h1 class="heading1">Login</h1>
     
     
     <form method="POST">
         <div class="mb-2">
           <label for="exampleInputEmail1" class="form-label">Username/Email</label>
-          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="umail" value="{{umail}}">
         </div>
         
         <div class="mb-2">
           <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
+          <input type="password" class="form-control" id="exampleInputPassword1" name="pwd" value="{{pwd}}">
         </div>
      
           
