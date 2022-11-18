@@ -141,4 +141,18 @@
   top: 10px;
   font-size: 30px;
 }
+.user-pfp{
+  height:40px; 
+  width:40px;
+  
+}
+
+.pfp-txt{
+  color:white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+
+
 /*# sourceMappingURL=work.css.map */

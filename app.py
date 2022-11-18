@@ -17,10 +17,13 @@ def index():
         return render_template("index.html")
 
 
-@app.route("/mynotes")
+@app.route("/mynotes", methods=["GET", "POST"])
 def notes():
+    if request.method == "POST":
+        editor_data = request.form["editordata"]
+
     if session.get("username"):
-        return render_template("index.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"])
+        return render_template("notes.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"])
     else:
         return render_template("notes.html")
 
@@ -89,7 +92,7 @@ def signup():
                 database=config.database)
             cursor = conn.cursor()
             sql = "INSERT INTO notes (username,email,password,pfp,email_confirmation) VALUES (%s,%s,%s,%s,%s)"
-            val = (username,email,hash_pwd,'Default','False')
+            val = (username,email,hash_pwd,'Default.png','False')
             cursor.execute(sql,val)
             conn.commit()
             conn.close()
@@ -97,7 +100,7 @@ def signup():
             session["username"] = username
             session["email"] = email
             session["verified"] = 'False'
-            session["pfp"] = 'Default'
+            session["pfp"] = 'Default.png'
             return redirect(url_for("index"))
 
 

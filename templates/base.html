@@ -8,7 +8,7 @@
     
     <link rel="shortcut icon" href="../static/img/icon.png" type="image/x-icon">
 
-  
+
 
 
 
@@ -16,11 +16,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+    <!-- jquery -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <!-- font awesome cdn -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<!-- jquery -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
 
     <!-- custom css -->
@@ -29,6 +30,14 @@
 
     <!-- custom js -->
     <script src="../static/js/main.js"></script>
+
+
+
+
+
+
+
+
 </head>
 <body>
   <header>
@@ -47,8 +56,37 @@
                 <a class="nav-link nav-link1" href="/mynotes">My Notes</a>
               </li>
              
+
+       
+                
+              
             </ul>
+            {% if username %}
+            
+            <div class="pfp-box">
+            {% if pfp == 'Default' %}
+            <!-- get fontawsome userprofile -->
+            
+            
+            <div class="dropdown">
+              <img src="static/img/{{pfp}}" alt="" class="user-pfp rounded-circle">
+              <a class="dropdown-toggle pfp-txt" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                {{username}}
+              </a>
+            
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </div>
+
+
+          </div>
+          {% endif %}
+            {% endif %}
         {% if not username %}
+
             
             <a href="/signup" id="log">
               <i class="fa-solid fa-arrow-right-to-bracket"></i>
@@ -63,18 +101,6 @@
 
   
 
-
-    <div class='popup'>
-      <div class='cnt223'>
-      <h1>Important Notice</h1>
-      <p>
-      We were affected by the fire next door and will remain closed until further notice.
-      <br/>
-      <br/>
-      <a href='' class='close'><i class="fa fa-close"></i></a>
-      </p>
-      </div>
-      </div>
 
 
 
