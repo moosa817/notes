@@ -179,6 +179,18 @@ nav {
   margin-bottom:20px;
   font-weight: bold;
 }
+.success-box{
+  /* success box color */
+  background-color: #4BB543;
+  text-align: center;
+  border-radius: 4px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  margin-bottom:20px;
+  font-weight: bold;
+}
+
 .note-toolbar{
   background-color: white !important;
 }

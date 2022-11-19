@@ -148,11 +148,36 @@
 }
 
 .pfp-txt{
+  margin-right: 40px;
   color:white;
   text-decoration: none;
   font-size: 18px;
 }
-
+.pfp-txt:hover{
+  transition: 0.4s;
+  font-weight: bold;
+  color:white;
+  border-style: solid;
+  border-width: 3px;
+  border-top: #fff;
+  border-right: 0px;
+  border-left: 0px;
+}
+.logout-drop:hover{
+  background:rgb(214, 23, 23);
+  color:white;
+  transition: 0.9s;
+}
+.pe{
+  font-weight: lighter;
+  font-size: smaller;
+}
+.files{
+  margin-top:10px; 
+  font-size: 20px;
+  border: 1px solid black;
+  padding:10px;
+}
 
 
 /*# sourceMappingURL=work.css.map */

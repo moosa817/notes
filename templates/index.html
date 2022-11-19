@@ -13,6 +13,35 @@
 
 {% if username %}
 yooo u logged {{username}}
+{% if error %}
+<div class="error-box">
+  {{error}}
+</div>
+{% endif %}
+
+{% if success %}
+<div class="success-box">
+  {{success}}
+</div>
+{% endif %}
+
+<form method="POST">
+    <input type="text" name="filename" placeholder="Enter your filename">
+    <input type="submit" value="Create File">    
+</form>
+<div class="pe">e.g, "mynotes"</div>
+
+
+<h2>Your Files</h2>
+{% for i in files %}
+
+<div class="files">
+{{i}}
+
+</div>
+{% endfor %}
+
+
 
 
 {% endif %}

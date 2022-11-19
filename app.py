@@ -1,6 +1,7 @@
 from flask import Flask,render_template,request,redirect,url_for,session
 import re
 import mysql.connector
+import sqlite3
 import config
 import bcrypt
 # create flask app
@@ -9,10 +10,46 @@ app = Flask(__name__)
 app.secret_key = "super secret key"
 app.url_map.strict_slashes = False
 
-@app.route("/")
+@app.route("/",methods=["GET","POST"])
 def index():
+    if request.method == "POST":
+        filename = request.form['filename']
+        file_regex = "^[a-zA-Z0-9_.-]+$"
+        if re.match(file_regex, filename):
+            conn = sqlite3.connect("notes_data.db")
+            cur = conn.cursor()
+            username = session["username"]
+
+            res = cur.execute("SELECT * FROM editor WHERE username=:username AND filename=:filename", {"username":username, "filename":filename})
+
+            if not res.fetchall():
+                cur.execute("INSERT INTO editor (username, filename) VALUES (:username, :filename)", {"username":username, "filename":filename})
+                conn.commit()
+                conn.close()
+                session["files"].append(filename)
+
+                return render_template("index.html",username= session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],success="File Created",files=session["files"])
+            else:
+                return render_template("index.html",username= session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],error="File Already Exists",files=session["files"])
+        else:
+            return render_template("index.html",username= session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],error="Enter a valid filename",files=session["files"])
+        
     if session.get("username"):
-        return render_template("index.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"])
+        username = session["username"]
+        conn = sqlite3.connect("notes_data.db")
+        cur = conn.cursor()
+        result = cur.execute("SELECT * FROM editor WHERE username=:username", {"username":username})
+
+        result = result.fetchall()
+        # print(result)
+
+        files = []
+        for i in result:
+            files.append(i[2])
+
+        session["files"] = files
+
+        return render_template("index.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"])
     else:
         return render_template("index.html")
 
@@ -23,7 +60,7 @@ def notes():
         editor_data = request.form["editordata"]
 
     if session.get("username"):
-        return render_template("notes.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"])
+        return render_template("notes.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"])
     else:
         return render_template("notes.html")
 
@@ -166,6 +203,8 @@ def login():
                 session["verified"] = email_verifications[index]
                 session["pfp"] = pfps[index]
                 return redirect(url_for("index"))
+            else:
+                return render_template("login.html",error="Wrong password",umail=umail)
 
 
 

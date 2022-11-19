@@ -64,7 +64,6 @@
             {% if username %}
             
             <div class="pfp-box">
-            {% if pfp == 'Default' %}
             <!-- get fontawsome userprofile -->
             
             
@@ -75,15 +74,18 @@
               </a>
             
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Change Password</a></li>
+                {% if verified == 'False' %}
+                <li><a class="dropdown-item" href="#">Verify Account</a></li>
+                {% endif %}
+                <hr>
+                <li><a class="logout-drop dropdown-item" href="/logout">Logout</a></li>
               </ul>
             </div>
 
 
           </div>
-          {% endif %}
             {% endif %}
         {% if not username %}
 
