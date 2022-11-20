@@ -71,7 +71,13 @@ checkbox.addEventListener('change', ()=>{
 });
 
 
-
+// to stop the browser from resubmit
 if ( window.history.replaceState ) {
   window.history.replaceState( null, null, window.location.href );
 }
+
+elements = document.getElementsByName("fadeOut")
+
+setTimeout(function() {
+  $('div[name=fadeOut]').fadeOut('fast');
+}, 20000);

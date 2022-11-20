@@ -14,13 +14,13 @@
 {% if username %}
 yooo u logged {{username}}
 {% if error %}
-<div class="error-box">
+<div class="error-box" name="fadeOut">
   {{error}}
 </div>
 {% endif %}
 
 {% if success %}
-<div class="success-box">
+<div class="success-box" name="fadeOut">
   {{success}}
 </div>
 {% endif %}
@@ -33,10 +33,21 @@ yooo u logged {{username}}
 
 
 <h2>Your Files</h2>
+{% set a = 0 %}
 {% for i in files %}
 
 <div class="files">
-{{i}}
+  
+  <p class="edits" style="display:inline" id="edit-{{loop.index}}">{{i}}</p>
+  <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
+  <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')">Done</button>
+
+<div class="files-icons">
+<a href="#"><i class="fa-sharp fa-solid fa-eye"></i></a>
+<a href="#"><i class="fa fa-solid fa-trash"></i></a>
+<a href="#"><i class="fa-sharp fa-solid fa-file-pen"></i></a>
+</div>
+
 
 </div>
 {% endfor %}
@@ -45,4 +56,7 @@ yooo u logged {{username}}
 
 
 {% endif %}
+
+
+<script src="/static/js/stuff.js"></script>
 {% endblock %}
