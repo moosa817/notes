@@ -194,4 +194,16 @@ nav {
 .note-toolbar{
   background-color: white !important;
 }
+
+.error{
+  display: none;
+  background-color: #d9534f!important;
+  text-align: center;
+  border-radius: 4px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  margin-bottom:20px;
+  font-weight: bold;
+}
 /*# sourceMappingURL=style.css.map */

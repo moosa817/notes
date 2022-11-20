@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,redirect,url_for,session
+from flask import Flask,jsonify,render_template,request,redirect,url_for,session
 import re
 import mysql.connector
 import sqlite3
@@ -14,8 +14,8 @@ app.url_map.strict_slashes = False
 def index():
     if request.method == "POST":
         filename = request.form['filename']
-        file_regex = "^[a-zA-Z0-9_.-]+$"
-        if re.match(file_regex, filename):
+        file_regex = "^[ a-zA-Z0-9_.-]+$"
+        if re.match(file_regex, filename) and len(filename) > 0 and len(filename) < 50:
             conn = sqlite3.connect("notes_data.db")
             cur = conn.cursor()
             username = session["username"]
@@ -211,6 +211,32 @@ def login():
         return render_template("login.html")
 
 
+
+@app.route("/edit_name",methods=["POST","GET"])
+def edit_name():
+    if request.method == "POST":
+        file_regex = "^[ a-zA-Z0-9_.-]+$"
+        input1 = request.form["input1"]
+        input2 = request.form["input2"]
+        if len(input1) == 0:
+            return jsonify({"error":"Please Enter a name."})
+        elif len(input1) > 50:
+            return jsonify({'errror':"Rename failed , name too long"})
+        elif not re.match(file_regex, input1):
+            return jsonify({"error": "Enter a valid name."})
+        else:
+            new_input = input1
+            original_input = input2
+            index = session["files"].index(original_input)
+            session["files"][index] = new_input
+            # add new input to database replacing it with original input
+            conn = sqlite3.connect("notes_data.db")
+            cur = conn.cursor()
+            cur.execute("UPDATE editor SET filename = :new_input WHERE filename= :orignal_input",{"new_input":new_input, "orignal_input":original_input})
+
+            conn.commit()
+            conn.close()
+            return jsonify({"success":"renamed successfully"})
 
 @app.route("/logout")
 def logout():
