@@ -48,7 +48,18 @@ yooo u logged {{username}}
   <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')">Done</button>
 
 <div class="files-icons">
-<a href="#"><i class="fa-sharp fa-solid fa-eye"></i></a>
+
+
+
+<a href="/view/{{loop.index}}"><i class="fa-sharp fa-solid fa-eye"></i></a>
+
+
+
+
+
+
+
+
 <a onclick="download_name('edit-{{loop.index}}')"><i class="fa-solid fa-download"></i></a>
 <!-- Button trigger modal -->
 <a onclick="open_delete('edit-{{loop.index}}')" cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal">

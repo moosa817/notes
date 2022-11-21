@@ -208,5 +208,16 @@
 .files a{
   color:black !important;
 }
+.file_heading{
+  font-size:40px;
+  text-align: center;
+  border: 1px solid black;
+  border-width: 50% !important;
+  margin-bottom: 5%;
 
+
+}
+.go-back{
+  font-weight: bold;
+}
 /*# sourceMappingURL=work.css.map */

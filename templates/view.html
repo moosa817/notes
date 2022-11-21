@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block title %} {{file_name}}  {% endblock %}
+
+{% block content %}
+
+<a href="/" class="go-back"> <i class="fa fa-solid fa-arrow-left"></i>Go Back</a>
+<div class="file_heading">View {{file_name}}.html</div>
+
+
+
+{{stuff | safe}}
+
+{% endblock %}

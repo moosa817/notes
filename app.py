@@ -278,6 +278,22 @@ def download_name():
         return jsonify({"success":True,"data":result})
 
 
+@app.route("/view/<n>")
+def view_name(n):
+    n = int(n)
+    n = n-1
+    name = session["files"][n]
+    conn = sqlite3.connect("notes_data.db")
+    cur  = conn.cursor()
+
+    cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input", {"orignal_input":name})
+
+    results = cur.fetchall()
+    result = results[0][0]
+    if result == None:
+        result = ""
+
+    return render_template("view.html",stuff=result,file_name=name)
 @app.route("/logout")
 def logout():
     session.clear()
