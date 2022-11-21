@@ -38,16 +38,28 @@ yooo u logged {{username}}
 {% set a = 0 %}
 {% for i in files %}
 
-<div class="files">
+<div class="files" id="f-{{loop.index}}">
   
+
+  
+
   <p class="edits" style="display:inline" id="edit-{{loop.index}}">{{i}}</p>
   <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
   <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')">Done</button>
 
 <div class="files-icons">
 <a href="#"><i class="fa-sharp fa-solid fa-eye"></i></a>
-<a href="#"><i class="fa fa-solid fa-trash"></i></a>
+<a href="#"><i class="fa-solid fa-download"></i></a>
+<!-- Button trigger modal -->
+<a onclick="open_delete('edit-{{loop.index}}')" style="color:black;cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  <i class="fa fa-solid fa-trash"></i>
+</a>
+
+
+
+
 <a href="#"><i class="fa-sharp fa-solid fa-file-pen"></i></a>
+
 </div>
 
 
@@ -58,6 +70,34 @@ yooo u logged {{username}}
 
 
 {% endif %}
+
+
+
+
+
+<!-- Modal for delete name -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body">
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button onclick="delete_name()" type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
 
 
 <script src="/static/js/stuff.js"></script>

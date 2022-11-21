@@ -10,6 +10,12 @@ app = Flask(__name__)
 app.secret_key = "super secret key"
 app.url_map.strict_slashes = False
 
+@app.before_request
+def make_session_permanent():
+    session.permanent = True 
+
+
+
 @app.route("/",methods=["GET","POST"])
 def index():
     if request.method == "POST":
@@ -237,6 +243,24 @@ def edit_name():
             conn.commit()
             conn.close()
             return jsonify({"success":"renamed successfully"})
+
+
+@app.route("/delete_name",methods=["POST"])
+def delete_name():
+    if request.method == "POST":
+        delete_input = request.form["delete_input"]
+        try:
+            session["files"].remove(delete_input)
+            conn = sqlite3.connect("notes_data.db")
+            cur = conn.cursor()
+
+            cur.execute("DELETE FROM editor WHERE filename = :orignal_input", {"orignal_input":delete_input})
+            conn.commit()
+            conn.close()
+            return jsonify({"success":True})
+        except:
+            return jsonify({"success": False})
+        
 
 @app.route("/logout")
 def logout():

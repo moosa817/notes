@@ -82,4 +82,29 @@ for (var i = 0; i < elements.length; i++) {
       evt.preventDefault();
     }
   })
+};
+var f 
+var id_no
+function open_delete(id){
+  myArray = id.split("-");
+  id_no = myArray[1]
+  f = document.getElementById(id).innerHTML
+  document.getElementById("modal-body").innerHTML  = "You Sure you want to delete " + f
+
 }
+
+function delete_name(){
+  $.ajax({
+    data: {
+      delete_input: f
+    },
+    type: 'POST',
+    url: '/delete_name'
+  })
+.done(function (data) {
+ if (data.success === true){
+  e_id = "f-"+id_no
+  console.log(e_id)
+  document.getElementById(e_id).remove()
+}
+})};
