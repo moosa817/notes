@@ -261,11 +261,30 @@ def delete_name():
         except:
             return jsonify({"success": False})
         
+@app.route("/download_name",methods=["GET", "POST"])
+def download_name():
+    if request.method == "POST":
+        download_file = request.form["download_file"]
+        
+        conn = sqlite3.connect("notes_data.db")
+        cur  = conn.cursor()
+
+        cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input", {"orignal_input":download_file})
+
+        results = cur.fetchall()
+        result = results[0][0]
+        if result == None:
+            result = ""
+        return jsonify({"success":True,"data":result})
+
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("index"))
+
+
+
 
 
 if __name__ == '__main__':

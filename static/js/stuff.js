@@ -92,7 +92,7 @@ function open_delete(id){
   document.getElementById("modal-body").innerHTML  = "You Sure you want to delete " + f
 
 }
-
+// file delete
 function delete_name(){
   $.ajax({
     data: {
@@ -108,3 +108,43 @@ function delete_name(){
   document.getElementById(e_id).remove()
 }
 })};
+
+
+
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+
+
+
+
+
+// file download 
+var file_name
+function download_name(id){
+  file_name = document.getElementById(id).innerHTML
+  $.ajax({
+    data: {
+      download_file: file_name
+    },
+    type: 'POST',
+    url: '/download_name'
+  })
+.done(function (data) {
+ if(data.success === true){
+  filename = file_name+".html"
+    download(filename,data.data)
+ }
+})
+
+}
