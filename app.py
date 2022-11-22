@@ -60,15 +60,31 @@ def index():
         return render_template("index.html")
 
 
-@app.route("/mynotes", methods=["GET", "POST"])
-def notes():
+@app.route("/notes/<n>", methods=["GET", "POST"])
+def notes(n):
+    if session.get("username"):
+
+        n = int(n)
+        n = n-1
+        name = session["files"][n]
+        conn = sqlite3.connect("notes_data.db")
+        cur  = conn.cursor()
+
+        cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input", {"orignal_input":name})
+
+        results = cur.fetchall()
+        result = results[0][0]
+        if result == None:
+            result = ""
+
+        return render_template("notes.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],stuff=result,file_name=name)
+
     if request.method == "POST":
         editor_data = request.form["editordata"]
-
-    if session.get("username"):
-        return render_template("notes.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"])
-    else:
+        print(editor_data) 
         return render_template("notes.html")
+
+        
 
 @app.route("/signup",methods=['POST','GET'])
 def signup():
