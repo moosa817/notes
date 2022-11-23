@@ -42,10 +42,17 @@ $(document).ready(function(){
 const checkbox = document.getElementById('checkbox');
 
 checkbox.addEventListener('change', ()=>{
+
+
+
+
+
   document.body.classList.toggle('light-mode');
   document.getElementById('footer').classList.toggle('light-footer');
   document.getElementById('nav').classList.toggle('light-nav');
 
+
+  // document.reload();
   if (document.getElementById('signup') != null){
   classList.toggle('signup-light');
   }
@@ -62,6 +69,8 @@ checkbox.addEventListener('change', ()=>{
 
 
 
+
+  window.location.reload();
 
 })
 

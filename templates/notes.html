@@ -1,50 +1,269 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notes</title>
-</head>
-<body>
-  {% if not username %}
+{% extends 'base.html' %}
+
+
+{% block title %} Notes {% endblock %}
+
+{% block content %}
+
+{% if not username %}
 
 <a href="/signup" class="first">Signup/Login to view your notes </a>
 
 {% endif %}
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+{% if username %}
 
 
-<form method="post">
-  <textarea id="summernote" name="editordata"></textarea>
+<!-- Include stylesheet -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-  <input type="submit" value="Save">
+<style>
+  svg {
+    filter: brightness(300%) contrast(250%);
+  }
+
+  span.ql-picker-label {
+    color: white;
+  }
+
+  svg:hover {
+    filter: none;
+  }
+
+  .ql-toolbar {
+    color: orange !important;
+  }
+
+  .quill-editor iframe {
+    pointer-events: none;
+  }
+
+
+
+  .ql-snow .ql-picker.ql-size .ql-picker-label::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item::before {
+    content: attr(data-value) !important;
+  }
+
+  /* sperartor */
+
+  /* #editor{
+  font-family: 'Patrick Hand', cursive;
+ } */
+
+
+
+
+  /* Set droplist names - -item is the currently selected font, -label is the font's appearance in the droplist*/
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='']::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='']::before {
+    content: 'Default';
+  }
+
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='times-new-roman']::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='times-new-roman']::before {
+    content: 'Times New Roman';
+    font-family: 'Times New Roman';
+  }
+
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='times-new-roman']::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='times-new-roman']::before {
+    content: 'Roboto';
+    font-family: 'Roboto';
+  }
+
+
+
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='arial']::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='arial']::before {
+    content: 'Arial';
+    font-family: 'Arial';
+  }
+
+  /****************************************************
+Set the font-family content used for the HTML content.
+*****************************************************/
+  .ql-font-arial {
+    font-family: 'Arial';
+  }
+
+  .ql-font-times-new-roman {
+    font-family: 'Patrick Hand', cursive;
+  }
+
+  .ql-font-roboto {
+    font-family: 'Roboto';
+  }
+
+</style>
+
+<!-- Create the editor container -->
+<div class="file_heading">{{file_name}}</div>
+
+<form>
+  <input name="editordata" type="hidden" id="editordata">
+  <div id="editor">
+    {{stuff | safe}}
+  </div>
+  <input class="btn btn-success" type="button" id="editor-btn" value="Save" onclick="submit_editor()">
 </form>
 
-
-    <script>
-     $(document).ready(function() {
-  $('#summernote').summernote();
-}); 
-    </script>
-
-  </div>
-
-</body>
-</html>
+<div class="success-box2" id="success-box" name="fadeOut">Saved</div>
 
 
+<!-- Include the Quill library -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
 
 
+<!-- Initialize Quill editor -->
+<script>
 
+  let Font = Quill.import('formats/font');
+  Font.whitelist = ['times-new-roman', 'arial', 'roboto'];
+  Quill.register(Font, true);
 
 
 
+
+
+
+
+  const fontSizeArr = ['8px', '9px', '10px', '12px', '14px', '16px', '20px', '24px', '32px', '42px', '54px', '68px', '84px', '98px'];
+
+  var Size = Quill.import('attributors/style/size');
+  Size.whitelist = fontSizeArr;
+  Quill.register(Size, true);
+
+
+  var toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike', 'code', 'link'],        // toggled buttons
+    ['blockquote', 'code-block', 'image', 'video', 'formula'],
+
+
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+    // text direction
+
+    [{ 'size': fontSizeArr }],  // custom dropdown
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+    [{ 'font': ['', 'times-new-roman', 'arial', 'roboto'] }],
+    [{ 'align': [] }],
+
+    ['clean']                                    // remove formatting button
+  ];
+
+
+
+
+
+
+
+
+
+  var quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+      imageResize: {
+        displaySize: true
+      },
+      toolbar: {
+        container: toolbarOptions,
+        handlers: {
+          image: imageHandler
+        }
+      }
+    },
+  });
+
+
+  function imageHandler() {
+    var range = this.quill.getSelection();
+    var value = prompt('What is the image URL');
+    if (value) {
+      this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
+    }
+  }
+
+
+
+  var n
+
+  var o = window.location.href;
+  // console.log(o)
+  n = o.split('notes/')
+  
+  const no = n[1]
+  // console.log(no)
+  function submit_editor() {
+
+   
+
+
+    // console.log("clicked")
+    var about = document.querySelector('input[name=editordata]');
+    about.value = JSON.stringify(quill.getContents());
+
+    editor_data = quill.root.innerHTML
+
+    // console.log(editor_data)
+    l = "<link href='https://cdn.quilljs.com/1.3.6/quill.snow.css' rel='stylesheet'>"
+
+    editor_data = l + editor_data
+
+
+    $.ajax({
+      data: {
+        editor_data: editor_data,
+      },
+      type: 'POST',
+      url: '/notes/'+no
+    })
+
+      .done(function (data) { 
+        if(data.success){
+          document.getElementById('success-box').style.display = "block"
+          document.getElementById('success-box').innerHTML = "Saved"
+        }
+      });
+          
+  }
+
+
+
+  if (localStorage.getItem('theme') == 1) {
+    o = document.getElementsByTagName("svg")
+    g = document.getElementsByClassName("ql-picker-label")
+    for (var l = 0; l < g.length; l++) {
+      g[l].style.color = "black"
+    }
+    for (var i = 0; i < o.length; i++) {
+      o[i].style.filter = "brightness(100%)"
+    }
+  }
+  else {
+    for (var i = 0; i < o.length; i++) {
+      o[i].style.filter = "brightness(300%)"
+    }
+  }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+</div>
+
+
+{% endif %}
+{% endblock %}

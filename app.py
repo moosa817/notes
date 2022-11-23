@@ -58,32 +58,6 @@ def index():
         return render_template("index.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"])
     else:
         return render_template("index.html")
-
-
-@app.route("/notes/<n>", methods=["GET", "POST"])
-def notes(n):
-    if session.get("username"):
-
-        n = int(n)
-        n = n-1
-        name = session["files"][n]
-        conn = sqlite3.connect("notes_data.db")
-        cur  = conn.cursor()
-
-        cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input", {"orignal_input":name})
-
-        results = cur.fetchall()
-        result = results[0][0]
-        if result == None:
-            result = ""
-
-        return render_template("notes.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],stuff=result,file_name=name)
-
-    if request.method == "POST":
-        editor_data = request.form["editordata"]
-        print(editor_data) 
-        return render_template("notes.html")
-
         
 
 @app.route("/signup",methods=['POST','GET'])
@@ -310,6 +284,55 @@ def view_name(n):
         result = ""
 
     return render_template("view.html",stuff=result,file_name=name)
+
+
+
+@app.route("/notes/<n>", methods=["GET", "POST"])
+def notes(n):
+    if session.get("username"):
+        if request.method == "POST":
+            editor_data = request.form["editor_data"]
+
+            n = int(n)
+            n = n-1
+            name = session["files"][n]
+
+
+
+            conn = sqlite3.connect("notes_data.db")
+            cur = conn.cursor()
+            cur.execute("UPDATE editor SET editor_data=:editor_data WHERE filename = :name", {"editor_data":editor_data,"name":name})
+
+            conn.commit()
+            conn.close()
+            return jsonify({"success":True})
+        else:
+            n = int(n)
+            n = n-1
+            name = session["files"][n]
+            conn = sqlite3.connect("notes_data.db")
+            cur  = conn.cursor()
+
+            cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input", {"orignal_input":name})
+
+            results = cur.fetchall()
+            result = results[0][0]
+            if result == None:
+                result = ""
+
+            return render_template("notes.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],stuff=result,file_name=name)
+
+       
+
+
+
+
+
+
+
+
+
+
 @app.route("/logout")
 def logout():
     session.clear()

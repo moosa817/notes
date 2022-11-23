@@ -220,5 +220,35 @@
 .go-back{
   font-weight: bold;
 }
+#editor-btn{
+  outline:0;
+  border:0px;
+  /* background:rgb(7, 180, 7); */
+  color:white;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-top:2%;
+  margin-left: 20%;
+  margin-right:20%;
+  padding:5px;
+  width:60%;
+}
 
+
+.success-box2{
+  /* success box color */
+  display:none;
+  color:white;
+  margin:auto auto auto;
+  margin-top:2%;
+  width:80%;
+  background-color: #4BB543;
+  text-align: center;
+  border-radius: 4px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  margin-bottom:20px;
+  font-weight: bold;
+}
 /*# sourceMappingURL=work.css.map */
