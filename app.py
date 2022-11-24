@@ -4,6 +4,9 @@ import mysql.connector
 import sqlite3
 import config
 import bcrypt
+import os
+
+
 # create flask app
 app = Flask(__name__)
 
@@ -343,4 +346,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",debug=False)
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
