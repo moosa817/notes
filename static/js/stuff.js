@@ -31,23 +31,29 @@ function StopEditable(id) {
   paragraph.contentEditable = false;
   paragraph.style.backgroundColor = "#333333";
   para = document.getElementById("paragraph")
-  console.log(paragraph.innerHTML)
+  // console.log(paragraph.innerHTML)
 
 
 
 
   id_no = myArray[1]
-  console.log(id_no)
+  // console.log(id_no)
   edit_id = "edit-button-" + id_no
   end_id = "end-button-" + id_no
   document.getElementById(edit_id).style.display = "inline-block";
   document.getElementById(end_id).style.display = "none";
 
 
+
   input1 = paragraph.innerHTML
   input2 = orignal_para
 
 
+  input1 = input1.replace(/&nbsp;/g,'');
+  input2 = input2.replace(/&nbsp;/g,'');
+
+  console.log(input1)
+  console.log(input2)
 
   $.ajax({
     data: {
@@ -61,7 +67,6 @@ function StopEditable(id) {
   if (data.error){
     document.getElementById('error').style.display = "block";
     document.getElementById('error').innerHTML = data.error
-    console.log(orignal_para)
     paragraph.innerHTML = orignal_para
   }
 
