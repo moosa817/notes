@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS `notes` (
 )
 
 CREATE TABLE IF NOT EXISTS `editor` (
-    `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `username` varchar(255) NOT NULL,
-    `editor_data` varchar(max)
+    `id`INTERGER PRIMARY KEY,
+    `username` TEXT NOT NULL,
+    `filename` TEXT NOT NULL,
+    `editor_data` TEXT
 )

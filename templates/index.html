@@ -12,7 +12,7 @@
 
 
 {% if username %}
-yooo u logged {{username}}
+
 {% if error %}
 <div class="error-box" name="fadeOut">
   {{error}}
@@ -25,14 +25,14 @@ yooo u logged {{username}}
 </div>
 {% endif %}
 
-<form method="POST">
+<form method="POST" class="createfile">
     <input type="text" name="filename" placeholder="Enter your filename">
     <input type="submit" value="Create File">    
 </form>
 <div class="pe">e.g, "mynotes"</div>
 
 
-<h2>Your Files</h2>
+<h2 style="margin-top:3%;">Your Files</h2>
 
 <div class="error" id="error" name="fadeOut"></div>
 {% set a = 0 %}
@@ -45,7 +45,7 @@ yooo u logged {{username}}
 
   <p class="edits" style="display:inline" id="edit-{{loop.index}}">{{i}}</p>
   <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
-  <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')">Done</button>
+  <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')"><i class="fa-solid fa-check"></i></button>
 
 <div class="files-icons">
 

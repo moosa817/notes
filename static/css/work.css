@@ -251,4 +251,34 @@
   margin-bottom:20px;
   font-weight: bold;
 }
+.createfile{
+  display:flex;
+  
+  
+
+}
+.createfile input[type="text"]{
+  border:none;
+  border-radius:2px;
+  box-shadow: 1px 1px 1px 1px;
+  width:85%;
+  padding:4px;
+  margin-right:2%;
+}
+.createfile input[type="submit"]{
+  width:auto;
+  white-space: normal;
+  padding:5px;
+  width:12%;
+}
+.edit-btn{
+  background:transparent;
+  border:none;
+  font-weight: bolder;
+}
+.end-btn{
+  font-weight: bolder;
+  margin-left:2%;
+  background:transparent;
+  border:none;}
 /*# sourceMappingURL=work.css.map */
