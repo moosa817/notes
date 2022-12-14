@@ -16,12 +16,12 @@ def index():
             conn = sqlite.connect("notes_data.db")
             cur = conn.cursor()
             cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            username = session["username"]
+            email = session["email"]
 
-            res = cur.execute("SELECT * FROM editor WHERE username=:username AND filename=:filename", {"username":username, "filename":filename})
+            res = cur.execute("SELECT * FROM editor WHERE email=:email AND filename=:filename", {"email":email, "filename":filename})
 
             if not res.fetchall():
-                cur.execute("INSERT INTO editor (username, filename) VALUES (:username, :filename)", {"username":username, "filename":filename})
+                cur.execute("INSERT INTO editor (email, filename) VALUES (:email, :filename)", {"email":email, "filename":filename})
                 conn.commit()
                 conn.close()
                 session["files"].append(filename)
@@ -33,11 +33,11 @@ def index():
             return render_template("index.html",username= session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],error="Enter a valid filename",files=session["files"])
         
     if session.get("username"):
-        username = session["username"]
+        email = session["email"]
         conn = sqlite.connect("notes_data.db")
         cur = conn.cursor()
         cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-        result = cur.execute("SELECT * FROM editor WHERE username=:username", {"username":username})
+        result = cur.execute("SELECT * FROM editor WHERE email=:email", {"email":email})
 
         result = result.fetchall()
         # print(result)

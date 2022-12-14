@@ -73,15 +73,15 @@ def signup():
                 database=config.database)
             cursor = conn.cursor()
             sql = "INSERT INTO notes (username,email,password,pfp,email_confirmation) VALUES (%s,%s,%s,%s,%s)"
-            val = (username,email,hash_pwd,'Default.png','False')
+            val = (username,email,hash_pwd,'static/img/Default.png','False')
             cursor.execute(sql,val)
             conn.commit()
             conn.close()
             session["login"] = True
             session["username"] = username
             session["email"] = email
-            session["verified"] = 'False'
-            session["pfp"] = 'Default.png'
+            session["verified"] = False
+            session["pfp"] = '/static/img/Default.png'
             return redirect(url_for("index.index"))
 
 

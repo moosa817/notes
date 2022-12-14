@@ -1,0 +1,139 @@
+.pf-heading{
+    text-align:center;
+    box-shadow: 1px 1px 1px 1px;
+    margin-bottom: 5%;
+}
+.pf-form{
+    margin:auto;
+    width:50vw;
+
+}
+
+.pf-box{
+    flex-flow: row wrap;
+  align-content: space-between;
+  justify-content: space-between;
+    
+}
+.pf-box img{
+    float:left;
+    clear: left;
+    width:25%;
+    box-shadow: 1px 1px;
+    
+    border: 1px solid black;
+    margin-right:5%;
+    margin-bottom:10%;
+   
+}
+.pfp-box hr{
+    width: 100%;
+}
+.delete-account{
+    position:relative;
+    left:45%;
+    top:2vh;
+}
+.update-pfp{
+    margin-top:20px;
+}
+
+#toChange{
+    color:black;
+  }
+  .pg1.pg2{
+    color:black;
+  }
+
+  #buttons{
+    display:inline !important;
+    background-color: whitesmoke;
+    color:black;
+   
+  }
+  #buttons button{
+   width:49%;
+   font-size:18px;
+   border: none;
+   border: 1px solid white;
+
+  }
+  #buttons button:hover{
+    transition:0.4s;
+    cursor: pointer;
+    border: 1px solid black;
+    background-color: white;
+    color:black;
+  }
+
+  .url-form{
+    display:inline;
+    background-color: whitesmoke;
+    color:black;
+  }
+
+  .url-form input[type="text"]{
+    border: 2px solid black;
+    width:80%;
+  }
+  .url-form button{
+    background: black;
+    border:1px solid black;
+    font-size:20px;
+    border-radius: 5px;
+    padding:8px;
+  }
+  .url-form button:hover{
+    cursor:pointer;
+  }
+
+  .preview{
+    margin:20px;
+    display:block;
+    width:20vw;
+    max-height:40vh;
+    margin:auto;
+    margin-top:20px;
+  }
+
+  .submit-url{
+    border:none;
+    margin:auto;
+    margin-top:50px;
+    
+    display:none;
+    width:80%;
+    color:white;
+    font-size:20px; 
+    /* //success color */
+    background: rgb(2, 102, 2);
+  }
+  .submit-url:hover{
+    cursor: pointer;
+  }
+
+  #add{
+    background-color: white;
+    color:black;
+    font-size: 15px;
+    padding:3px;
+    width:10%;
+  }
+  #add:hover{
+    background:black;
+    color:white;
+    transition: 1s;
+  }
+  .heading-modal{
+    margin-top:5%;
+    text-align: center;
+  }
+  #form1 input{
+    
+    width:100%;
+    margin:auto;
+    margin-top:5%;
+  }
+#form1 input[type="submit"]{
+  box-shadow: 1px 1px 1px 1px;
+}

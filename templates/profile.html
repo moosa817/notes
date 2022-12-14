@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{%block title %} Notes - Profile {%endblock%}
+
+
+{% block content %}
+
+
+
+<!-- Modal  for DELETING-->
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">DELETE YOUR ACCOUNT</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" class="url-form">
+        <form method="POST" id="form1">
+          <label for="">Enter "DELETE MY ACCOUNT" to confirm (no comming back)</label>
+          <input id="del-user" type="hidden" name="del-username" value="{{username}}">
+          <input id="del-field" type="text" name="del-field" placeholder="">
+          <input type="submit" id="del-btn" style="display:none;" class="btn btn-outline-danger" value="DELETE MY ACCOUNT">
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Modal for uploading images -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title text-center" id="exampleModalLabel">Change Profile Pic</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+           <div class="modal-body">
+            <div id="buttons">
+                <button id="tab1">URL</button>
+                <button id="tab2">From files</button>
+              </div>
+              <div id="pages">
+                
+                
+                <p id="toChange">
+                    </p>
+               
+        
+                      
+                    <div id="page1" style="display:none;">
+                     
+                        <h4 class="heading-modal">Add Image Through URL</h4>
+                        
+                       
+                        <div id="url-error" style="display:none">Unvalid URL</div>
+                  
+                      
+                      <form method="post" class="url-form">
+                        <input id="name-url" type="hidden" name="name-url" value="{{username}}">
+                        <input id="url" type="text" name="thumbnail" placeholder="Enter URL">
+                        <button type="button" id="add">Add</button>
+        
+        
+        
+                        <img class="preview" onerror="document.getElementById('url-error').style.display = 'block';document.getElementById('url-submit').style.display = 'none';">
+        
+                        <input id="url-submit" class="submit-url" type="submit" value="Submit">
+                      </form>
+                      
+          
+                      
+                    
+                    
+                    </div>
+              <div id="page2" style="display:none;" class="pg2"> 
+                <h1 style="margin-top:20px; margin-bottom:0px;background:whitesmoke; color:black">Upload Image</h1>
+                <h1 id="name_for_url2" style="background:whitesmoke; color:black"></h1><br>
+                also images/gifs larger than 2mb gets ingored<br>
+                <form method="post" class="url-form" enctype="multipart/form-data">
+                  <input id="name-url2" type="hidden" name="name-upload" value="{{username}}">
+                  <input name="file" type='file' onchange="readURL(this);" />
+        
+                  <img class="preview"  id="blah" src="" alt="" />
+                  <center style="margin-top:5%;">
+                  <input id="url-submit" class="submit-url" type="submit" value="Submit"></center>
+                </form>
+        
+        
+        
+                
+        
+              
+              
+              
+              
+              </div>
+        </div>
+        
+      </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="b-box">
+<h1 class="pf-heading">Profile</h1>
+
+<div class="pf-box">
+        <img src="{{pfp}}" >
+
+    <div class="pf-username">Username: {{username}} <a href="/profile_edit">Change</a>  </div>
+    <hr>
+    <div class="pf-email">Email: {{email}}
+        {% if not verified %}
+      
+        <a style="color:red" href="/verify">Verify Email</a>
+
+
+        {% endif %}
+
+    
+    
+    </div>
+<hr>
+    <div>
+        Password: <a href="/profile_edit">Change Password</a>
+    </div>
+</div>
+<a href="#modal-option-3" id="modal-option-3"></a>
+
+
+<button type="button" class="btn btn-success update-pfp" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Update Profile Pic</button>
+ 
+
+
+    
+    </a>
+<div class="delete-account">
+    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal1">Delete Account</button>
+</div>
+
+
+
+</div>
+
+
+<script src="static/js/profile.js"></script>
+{% endblock %}  

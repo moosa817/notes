@@ -281,4 +281,17 @@
   margin-left:2%;
   background:transparent;
   border:none;}
+
+
+  .verify-plz::before{
+    position:absolute;
+    float:right;
+    content: '';
+    background-color:red;
+    border-radius:50%;
+    opacity:0.9;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+  }
 /*# sourceMappingURL=work.css.map */

@@ -6,7 +6,11 @@
   margin: 0;
   padding: 0;
 }
-
+html,
+body{
+width:100%;
+overflow-x:hidden;
+}
 body {
   font-family: 'Roboto Slab', serif !important;
   background: #333333 !important;
@@ -21,6 +25,7 @@ body {
 }
 
 nav {
+  width:100vw;
   border: 0.5vw solid #212529 !important;
 }
 
@@ -40,7 +45,7 @@ nav {
 }
 
 .active-link {
-  color: #fff !important;
+  color: whitesmoke !important;
   border-style: solid;
   border-width: 3px;
   border-top: #fff;
@@ -190,7 +195,6 @@ nav {
   margin-bottom:20px;
   font-weight: bold;
 }
-
 .note-toolbar{
   background-color: white !important;
 }
