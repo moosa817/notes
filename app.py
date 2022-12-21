@@ -2,7 +2,7 @@ from flask import Flask,session
 import os
 import config
 from flask_files.signup import signup_page
-from flask_files.login import login_page
+from flask_files.login import login_page,reset_page
 from flask_files.index import index_page
 from flask_files.notes import notes_page
 from flask_files.index_edit import index_edit_page,delete_name_page,view_page,download_name_page
@@ -35,6 +35,7 @@ app = Flask(__name__)
 
 app.register_blueprint(signup_page)
 app.register_blueprint(login_page)
+app.register_blueprint(reset_page)
 app.register_blueprint(index_page)
 app.register_blueprint(notes_page)
 
