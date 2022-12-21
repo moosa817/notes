@@ -1,5 +1,6 @@
 from flask import Flask,session
 import os
+import config
 from flask_files.signup import signup_page
 from flask_files.login import login_page
 from flask_files.index import index_page
@@ -13,6 +14,24 @@ UPLOAD_FOLDER = os.path.join(b, UPLOAD_FOLDER)
 
 # create flask app
 app = Flask(__name__)
+
+# mail = Mail(app) # instantiate the mail class
+   
+# # configuration of mail
+# app.config['MAIL_SERVER']= config.MAIL_SERVER
+# # app.config['MAIL_PORT'] = config.MAIL_PORT
+# app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
+# app.config['MAIL_PASSWORD'] = config.MAIL_PWD
+# app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
+# app.config['MAIL_USE_SSL'] = config.MAIL_USE_SSL
+
+
+
+
+
+
+
+
 
 app.register_blueprint(signup_page)
 app.register_blueprint(login_page)

@@ -2,9 +2,13 @@ from flask import session,request,blueprints,redirect,url_for,render_template
 import re
 from pysqlcipher3 import dbapi2 as sqlite
 import config
-
+from email.message import EmailMessage
+import ssl
+from flask import current_app
+import smtplib
 
 index_page = blueprints.Blueprint('index', __name__,static_folder='static',template_folder='templates')
+
 
 
 @index_page.route("/",methods=["GET","POST"])
@@ -56,3 +60,8 @@ def index():
 def logout():
     session.clear()
     return redirect(url_for("index.index"))
+
+
+@index_page.route("/test",methods=["GET", "POST"])
+def test():
+    return 'sent'

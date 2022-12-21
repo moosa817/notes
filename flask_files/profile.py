@@ -6,8 +6,27 @@ import config
 from werkzeug.utils import secure_filename
 import re
 import bcrypt
+from pysqlcipher3 import dbapi2 as sqlite
+import random
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif','webp','tiff'])
+def Email_To(email):
+    random_no = random.randrange(1, 10**6)
+
+    headers = {
+    'Authorization': f'Bearer {config.courier_api}',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    }
+
+    data = """{"message": {"to": {"email":"%s"},
+    "content": { "title": "Verify Your Email!",  "body": "Your Verification Code is {{code}}"},"data": {"code": %s }}}""" % (email,random_no)
+
+    # print(data)
+    response = requests.post('https://api.courier.com/send', headers=headers, data=data)
+    return random_no
+
+
+
 
 def update_user(old_username,new_username):
     conn = mysql.connector.connect(
@@ -204,6 +223,7 @@ def profile():
 
         elif request.form.get("del-username"):
             username = request.form["del-username"]
+
             print("gonna have to delete",username)
             conn = mysql.connector.connect(
                     host=config.host,
@@ -219,6 +239,15 @@ def profile():
             cur.execute(sql % val)
             conn.commit()
             conn.close()
+            
+            conn = sqlite.connect("notes_data.db")
+            cur = conn.cursor()
+            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+            cur.execute("DELETE FROM editor WHERE email = :email",{"email":session["email"]})
+            conn.commit()
+            conn.close()
+
+
             return redirect('/logout')
 
 
@@ -278,4 +307,35 @@ def verify():
     if session["verified"]:
         return redirect(url_for("index.index"))
     else:
+        if request.method == "POST":
+            if request.form.get("email"):
+                email = request.form["email"]
+                try:
+                    code = Email_To(session["email"])
+                    session["code"] = code
+                    return jsonify({"success":True})
+                except:
+                    return jsonify({"error":True})
+            if request.form.get("code"):
+                code = request.form["code"]
+                if int(code) == int(session["code"]):
+                    conn = mysql.connector.connect(
+                        host=config.host,
+                        user=config.user,
+                        passwd=config.passwd,
+                        database=config.database)
+                    cursor = conn.cursor()
+                    sql = "UPDATE notes SET email_confirmation='%s' WHERE email='%s'"
+                    val = ('True',session["email"])
+                    
+                    cursor.execute(sql%val)
+                    
+                    conn.commit()
+                    conn.close()
+                    session["verified"] = True
+                    return jsonify({"success":True})
+                else:
+                    return jsonify({"success":False})
+
+
         return render_template("verify.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"])

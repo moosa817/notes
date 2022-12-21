@@ -114,3 +114,55 @@ function update(){
 
 })
 };
+function verify(){
+  verify_btn = document.getElementById('verify-btn')
+  email_form = document.getElementById("email")
+  verify_btn.innerHTML = "Sending Email"
+email = email_form.value
+
+$.ajax({
+  data: {
+    email: email
+  },
+  type: 'POST',
+  url: '/verify'
+})
+.done(function (data) {
+  if(data.success){
+    document.getElementById("e").style.display = "none"
+    verify_btn.style.display = "none"
+    email_form.style.display = "none"
+  document.getElementById('code-form').style.display = 'block'
+  }
+  else{
+    document.getElementById("edit-error").style.display = "block"
+    document.getElementById("edit-error").innerHTML = "Something went wrong"
+  }
+})
+}
+
+
+function checkCode(){
+  console.log("clicked")
+  code_value = document.getElementById("code").value
+  $.ajax({
+    data: {
+      code: code_value
+    },
+    type: 'POST',
+    url: '/verify'
+  })
+  .done(function (data) {
+    if(data.success){
+      document.getElementById('heading-verify').innerHTML = "Email Verified"
+  document.getElementById('code-form').style.display = 'none'
+    document.getElementById("edit-success").innerHTML = "Email verified"
+    document.getElementById("eidt-success").style.display = "block"
+    }
+    else{
+      document.getElementById("edit-error").style.display = "block"
+      document.getElementById("edit-error").innerHTML = "Wrong Code"
+    }
+  })
+
+}

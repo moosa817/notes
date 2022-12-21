@@ -137,3 +137,8 @@
 #form1 input[type="submit"]{
   box-shadow: 1px 1px 1px 1px;
 }
+.verify{
+  width:20%;
+  margin-right:40%;
+  margin-left:40%;
+}
