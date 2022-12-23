@@ -19,23 +19,27 @@ def edit_name():
         file_regex = "^[ a-zA-Z0-9_.-]+$"
         input1 = request.form["input1"]
         input2 = request.form["input2"]
+        new_input = input1
+        original_input = input2
+
         if len(input1) == 0:
             return jsonify({"error":"Please Enter a name."})
+        elif original_input in session["files"]:
+            return jsonify({"error":"File Exists Give another name"})
         elif len(input1) > 50:
             return jsonify({'errror':"Rename failed , name too long"})
         elif not re.match(file_regex, input1):
             print(input1)
             return jsonify({"error": "Enter a valid name."})
         else:
-            new_input = input1
-            original_input = input2
+            
             index = session["files"].index(original_input)
             session["files"][index] = new_input
             # add new input to database replacing it with original input
             conn = sqlite.connect("notes_data.db")
             cur = conn.cursor()
             cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("UPDATE editor SET filename = :new_input WHERE filename= :orignal_input",{"new_input":new_input, "orignal_input":original_input})
+            cur.execute("UPDATE editor SET filename = :new_input WHERE filename= :orignal_input AND email=:email",{"new_input":new_input, "orignal_input":original_input,"email":session["email"]})
 
             conn.commit()
             conn.close()

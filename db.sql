@@ -9,7 +9,14 @@ CREATE TABLE IF NOT EXISTS `notes` (
 
 CREATE TABLE IF NOT EXISTS `editor` (
     `id`INTERGER PRIMARY KEY,
-    `username` TEXT NOT NULL,
+    `email` TEXT NOT NULL,
     `filename` TEXT NOT NULL,
     `editor_data` TEXT
+)
+
+CREATE TABLE IF NOT EXISTS `use_media`(
+    `id` INTERGER PRIMARY KEY,
+    `email` TEXT NOT NULL,
+    `email_to_use` TEXT NOT NULL,
+    `status` TEXT
 )

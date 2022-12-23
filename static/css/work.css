@@ -294,4 +294,10 @@
     height: 10px;
     pointer-events: none;
   }
+
+.small-info{
+  margin-top: 4%;
+  margin-bottom: 3%;
+  text-align: center;
+}
 /*# sourceMappingURL=work.css.map */

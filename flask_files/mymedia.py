@@ -5,68 +5,121 @@ from flask import current_app
 import requests
 import base64
 from flask_files import dropbox_stuff as Db
-
+import re
 
 media_page = blueprints.Blueprint('media_page', __name__,static_folder='static',template_folder='templates')
 
 
 
-@media_page.route("/media")
+@media_page.route("/media",methods=['GET','POST'])
 def media():
-    code = request.args.get("code")
-    if code:
-        
-        client_creds = f"{config.drop_box_id}:{config.drop_box_pwd}"
-        client_creds_bs64 = base64.b64encode(client_creds.encode())
+    if request.method == "POST":
+        if request.form.get("email"):
+            email = request.form["email"]
+            emailRegex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
-        headers = {
-            "Authorization": f"Basic {client_creds_bs64.decode()}"
-        }
+            if not re.match(emailRegex,email):
+                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],use=False,error="Enter a Valid Email Address")
 
-        data = {
-            "code":code,
-            "grant_type":"authorization_code",
-            "redirect_uri":"http://localhost:5000/media"
-        }
-
-
-        r = requests.post("https://api.dropboxapi.com/oauth2/token",headers=headers,data=data)
-
-
-        stuff = r.json()
-        if r.status_code == 200:
-            access_token = stuff["access_token"]
-            refresh_token = stuff["refresh_token"]
-
-            session["refresh_token"] = refresh_token
-            session["access_token"] = access_token
-
-
-            Db.MyStuff(session["access_token"])
-
-
-
-            return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True)
-        else:
-            return redirect('/media')
-
-    if session.get("access_token"):
-        if Db.validate_token(session["access_token"]):
-            # token is good to go 
-            print("here")
-            Db.MyStuff(session["access_token"])
-            return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True)
+            conn = sqlite.connect("notes_data.db")
+            cur = conn.cursor()
+            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+            cur.execute("INSERT INTO use_media (email,email_to_use,status) VALUES (:1,:2,:3)" , {'1':session["email"],'2':email,'3':"pending"}) 
+            conn.commit()
             
-        else:
-            # refresh token
-            try:
-                session["access_token"] = Db.RefreshToken(session["refresh_token"])
-            except:
-                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=False)
 
-            Db.MyStuff(session["access_token"])
+            headers = {
+            'Authorization': f'Bearer {config.courier_api}',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            }
 
-            return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True)
+            data = """{"message": {"to": {"email":"%s"},
+            "content": { "title": "Add User To Verification state",  "body": "Add this user on notes for media email: %s"}}}""" % (config.myemail,session["email"])
+
+            # print(data)
+            response = requests.post('https://api.courier.com/send', headers=headers, data=data)
+    
 
 
-    return render_template("mymedia.html")
+    can_use = False
+    conn = sqlite.connect("notes_data.db")
+    cur = conn.cursor()
+    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+    cur.execute("SELECT * FROM use_media WHERE email= :email",{"email":session["email"]})
+
+    result = cur.fetchall()
+    try:
+        result = result[0]
+    except:
+        result = result
+
+
+    if not result:
+        can_use = False
+    else:
+        status = result[3]
+        if status == "pending":
+            return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],use="pending")
+        elif status == "verified":
+            can_use = True
+
+
+    if can_use:
+        code = request.args.get("code")
+        if code:
+            
+            client_creds = f"{config.drop_box_id}:{config.drop_box_pwd}"
+            client_creds_bs64 = base64.b64encode(client_creds.encode())
+
+            headers = {
+                "Authorization": f"Basic {client_creds_bs64.decode()}"
+            }
+
+            data = {
+                "code":code,
+                "grant_type":"authorization_code",
+                "redirect_uri":"http://localhost:5000/media"
+            }
+
+
+            r = requests.post("https://api.dropboxapi.com/oauth2/token",headers=headers,data=data)
+
+
+            stuff = r.json()
+            if r.status_code == 200:
+                access_token = stuff["access_token"]
+                refresh_token = stuff["refresh_token"]
+
+                session["refresh_token"] = refresh_token
+                session["access_token"] = access_token
+
+
+                Db.MyStuff(session["access_token"])
+
+
+
+                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True)
+            else:
+                return redirect('/media')
+
+        if session.get("access_token"):
+            if Db.validate_token(session["access_token"]):
+                # token is good to go 
+                print("here")
+                Db.MyStuff(session["access_token"])
+                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True)
+                
+            else:
+                # refresh token
+                try:
+                    session["access_token"] = Db.RefreshToken(session["refresh_token"])
+                except:
+                    return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=False)
+
+                Db.MyStuff(session["access_token"])
+
+                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True)
+
+
+    else:
+        return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],use=False)

@@ -8,6 +8,6 @@ db_pwd = "sk96Jaffasaladflask"
 
 courier_api = 'pk_prod_1SGD37TKXCMPFXMW21SSPM80F9SH'
 
-
+myemail = "computerknowledge817@gmail.com"
 drop_box_id = '8upjaiafj0gq7hh'
 drop_box_pwd = 'xashkwonpdcg30o'
