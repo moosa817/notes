@@ -2,10 +2,7 @@ from flask import session,request,blueprints,redirect,url_for,render_template
 import re
 from pysqlcipher3 import dbapi2 as sqlite
 import config
-from email.message import EmailMessage
-import ssl
-from flask import current_app
-import smtplib
+
 
 index_page = blueprints.Blueprint('index', __name__,static_folder='static',template_folder='templates')
 

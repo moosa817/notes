@@ -7,6 +7,11 @@ from flask_files.index import index_page
 from flask_files.notes import notes_page
 from flask_files.index_edit import index_edit_page,delete_name_page,view_page,download_name_page
 from flask_files.profile import profile_page,profile_edit_page,verify_page
+from flask_files.mymedia import media_page
+
+
+
+
 UPLOAD_FOLDER = 'static/imgs'
 b = os.getcwd()
 # print(os.listdir())
@@ -49,6 +54,9 @@ app.register_blueprint(profile_page)
 app.register_blueprint(profile_edit_page)
 app.register_blueprint(verify_page)
 
+
+app.register_blueprint(media_page)
+
 app.secret_key = "super secret key"
 app.url_map.strict_slashes = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -65,4 +73,6 @@ def make_session_permanent():
 
 
 if __name__ == '__main__':
+    # context = ('server.crt', 'server.key')#certificate and key files
+    
     app.run(host="0.0.0.0",debug=True, port=os.getenv("PORT", default=5000))

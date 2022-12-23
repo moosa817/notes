@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{%block title%}My Media{%endblock%}
+
+{%block content%}
+<h1 class="heading-modal">Upload Images And Vids</h1>
+
+
+{% if token %}
+yay 
+{%endif%} 
+
+{% if not token %}
+
+<a href="https://www.dropbox.com/oauth2/authorize?client_id=8upjaiafj0gq7hh&redirect_uri=http://localhost:5000/media&response_type=code&token_access_type=offline">Login With DropBox</a>
+
+
+{%endif%}
+<!-- <img src="https://www.dropbox.com/s/4rgz7y3v1309hj1/Default.png?raw=1"> -->
+{%endblock%}
+
+
+<!-- https://www.dropbox.com/oauth2/authorize?client_id=479mg1ei5wx7ura&redirect_uri=http://localhost:5000/media&response_type=code&token_access_type=offline -->
+
+<!-- 1mM8E2zfPSggUJTs5XPgTeuHzgllNAfAP/ -->
