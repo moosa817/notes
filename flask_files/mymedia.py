@@ -41,6 +41,16 @@ def media():
             response = requests.post('https://api.courier.com/send', headers=headers, data=data)
     
 
+        if request.form.get("delete-file"):
+            delete_file = request.form["delete-file"]
+            name = delete_file.split("/Notes-817/")
+            name = name[1]
+            if Db.DeleteFile(session["access_token"],delete_file):
+                del session["dp_files"][name]
+            else:
+                pass
+
+
 
     can_use = False
     conn = sqlite.connect("notes_data.db")
@@ -111,7 +121,7 @@ def media():
                 return redirect('/media')
 
         if session.get("access_token"):
-            if True: #Db.validate_token(session["access_token"]):
+            if Db.validate_token(session["access_token"]):
                 
                 # token is good to go 
                 print("from validate token")
@@ -160,3 +170,4 @@ def refresh():
     dp_files = Db.MyStuff(session["access_token"])
     session["dp_files"] = dp_files
     return redirect("/media")
+

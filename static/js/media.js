@@ -21,3 +21,16 @@ function copy(url,id){
 		element.innerHTML = "Copy Url"
 	}, 5000);
 }
+
+function ShowDelete(path){
+	document.getElementById("modal-body").innerHTML = `'You Sure you want to Delete ${path}'
+	<form method="POST">
+	<input type="hidden" value="${path}" name="delete-file">
+	<button class="btn btn-danger" type="submit">Delete</button>
+	</form>
+	
+	
+	`
+
+	console.log("name")
+}

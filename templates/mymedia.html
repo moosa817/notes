@@ -28,14 +28,17 @@
     <li>
       <img src="{{dp_files[i][0]}}" alt="" />
       <div class="overlay">
-        {{dp_files[i][2]}} <br>
+        {{i}} <br>
         {{dp_files[i][1]}} <br>
 
 
         <div><button class="btn btn-sm btn-outline-primary" id="b-{{loop.index}}" onclick="copy('{{dp_files[i][0]}}','b-{{loop.index}}')">Copy Url</button></div><br>
         <div><button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
             onclick="SwitchModalData('{{dp_files[i][0]}}','{{dp_files[i][3]}}')">View</button></div><br>
-        <div><button class="btn btn-sm btn-outline-danger">Delete</button></div><br>
+
+
+
+        <div><button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ShowDelete('{{dp_files[i][2]}}')">Delete</button></div><br>
 
 
       </div>
@@ -47,13 +50,13 @@
     <li>
       <video src="{{dp_files[i][0]}}"></video>
       <div class="overlay">
-        {{dp_files[i][2]}} <br>
+        {{i}} <br>
         {{dp_files[i][1]}} <br>
         <div><button class="btn btn-sm btn-outline-primary" id="b-{{loop.index}}" onclick="copy('{{dp_files[i][0]}}','b-{{loop.index}}')">Copy Url</button></div><br>
         
         <div><button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
             onclick="SwitchModalData('{{dp_files[i][0]}}','{{dp_files[i][3]}}')">View</button></div><br>
-        <div><button class="btn btn-sm btn-outline-danger">Delete</button></div><br>
+            <div><button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ShowDelete('{{dp_files[i][2]}}')">Delete</button></div><br>
 
 
 
@@ -68,14 +71,14 @@
     <li>
       <img src="https://www.iconpacks.net/icons/2/free-file-icon-1453-thumb.png" alt="" />
       <div class="overlay">
-        {{dp_files[i][2]}} <br>
+        {{i}} <br>
         {{dp_files[i][1]}} <br>
 
 
         <div><button class="btn btn-sm btn-outline-primary" id="b-{{loop.index}}" onclick="copy('{{dp_files[i][0]}}','b-{{loop.index}}')">Copy Url</button></div><br>
         <div><button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
             onclick="SwitchModalData('{{dp_files[i][0]}}','{{dp_files[i][3]}}')">View</button></div><br>
-        <div><button class="btn btn-sm btn-outline-danger">Delete</button></div><br>
+            <div><button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ShowDelete('{{dp_files[i][2]}}')">Delete</button></div><br>
 
 
       </div>

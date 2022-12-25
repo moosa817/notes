@@ -96,3 +96,9 @@ def RefreshToken(refresh_token):
     stuff = r.json()
     access_token = stuff["access_token"]
     return access_token
+
+
+def DeleteFile(token,path):
+    dbx = dropbox.Dropbox(token)
+    dbx.files_delete(path)
+    return True
