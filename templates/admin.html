@@ -107,9 +107,33 @@
             <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
             <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')"><i class="fa-solid fa-check"></i></button></td>
 
+            <td>
+              <form method="post">
+                <input type="hidden" name="delete_email" value="{{i}}">
+                <button type="submit">
+                  <i class='fa fa-solid fa-trash'></i>
+                </button>
+
+              </form>
+            
+            </td>
+            
+
       </tr>
   
 {% endfor %}
+<tr>
+  <form method="post">
+    <td></td>
+    <td><input type="email" placeholder="Email" name="email1" required></td>
+    <td><input type="email" placeholder="Email To use" name="email_to_use1" required></td>
+    <td><input type="text" placeholder="Status" name="status1" required></td>
+    <td><input type="submit"></td>
+
+
+  </form>
+
+</tr>
 </tbody>
 
 </table>

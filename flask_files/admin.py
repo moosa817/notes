@@ -18,6 +18,15 @@ def admin():
             else:
                 return render_template("admin.html",login=False,error="wrong pwd")
     
+        if request.form.get("delete_email"):
+            to_delete = request.form.get("delete_email")
+            conn = sqlite.connect("notes_data.db")
+            cur = conn.cursor()
+            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+            cur.execute("DELETE FROM use_media WHERE email = :email",{"email":to_delete})
+            conn.commit()
+            conn.close()
+
         if request.form.get("input1"):
             input1 = request.form["input1"]
             email = request.form["email"]
@@ -34,6 +43,30 @@ def admin():
             
         
     if session.get("admin"):
+        if request.form.get("email1") and request.form.get("email_to_use1") and request.form.get("status1"):
+            email = request.form["email1"]
+            email_to_use = request.form["email_to_use1"]
+            status = request.form["status1"]
+
+            emailRegex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
+            if not re.match(emailRegex,email) or not re.match(emailRegex,email_to_use):
+                pass
+            else:
+                conn = sqlite.connect("notes_data.db")
+                cur = conn.cursor()
+                cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+                cur.execute("INSERT INTO use_media (email,email_to_use,status) VALUES (:1,:2,:3)" , {'1':email,'2':email_to_use,'3':status}) 
+                conn.commit()
+        
+
+
+
+
+
+
+
+
         page = request.args.get("page")
         if page == "editor":
             conn = sqlite.connect("notes_data.db")

@@ -9,6 +9,7 @@ import re
 
 media_page = blueprints.Blueprint('media_page', __name__,static_folder='static',template_folder='templates')
 
+disconnect_page = blueprints.Blueprint('disconnect_page', __name__,static_folder='static',template_folder='templates')
 
 
 @media_page.route("/media",methods=['GET','POST'])
@@ -34,7 +35,7 @@ def media():
             }
 
             data = """{"message": {"to": {"email":"%s"},
-            "content": { "title": "Add User To Verification state",  "body": "Add this user on notes for media email: %s"}}}""" % (config.myemail,session["email"])
+            "content": { "title": "Add User To Verification state",  "body": "Add this user on notes for media email: %s , use email is %s"}}}""" % (config.myemail,session["email"],email)
 
             # print(data)
             response = requests.post('https://api.courier.com/send', headers=headers, data=data)
@@ -47,12 +48,17 @@ def media():
     cur.execute("PRAGMA key='{}'".format(config.db_pwd))
     cur.execute("SELECT * FROM use_media WHERE email= :email",{"email":session["email"]})
 
+
+    
+
     result = cur.fetchall()
     try:
         result = result[0]
     except:
         result = result
 
+
+    
 
     if not result:
         can_use = False
@@ -94,20 +100,27 @@ def media():
                 session["access_token"] = access_token
 
 
-                Db.MyStuff(session["access_token"])
+                
+                
+                dp_files = Db.MyStuff(session["access_token"])
+                
+                session["dp_files"] = dp_files
 
-
-
-                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True)
+                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files)
             else:
                 return redirect('/media')
 
         if session.get("access_token"):
-            if Db.validate_token(session["access_token"]):
+            if True: #Db.validate_token(session["access_token"]):
+                
                 # token is good to go 
-                print("here")
-                Db.MyStuff(session["access_token"])
-                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True)
+                print("from validate token")
+                if not session.get("dp_files"):
+                    dp_files = Db.MyStuff(session["access_token"])
+                    session["dp_files"] = dp_files
+                else:
+                    dp_files = session["dp_files"]
+                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files)
                 
             else:
                 # refresh token
@@ -116,10 +129,34 @@ def media():
                 except:
                     return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=False)
 
-                Db.MyStuff(session["access_token"])
 
-                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True)
+                
+                if not session.get("dp_files"):
+                    dp_files = Db.MyStuff(session["access_token"])
+                else:
+                    dp_files = session["dp_files"]
 
+                return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files)
 
+        else:
+            return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],use=True,token=False)
+            
     else:
         return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],use=False)
+
+    return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],use=False)        
+
+
+
+@disconnect_page.route("/disconnect")
+def dis():
+    session.pop("access_token",default=None)
+    session.pop("refresh_token",default=None)
+    return redirect("/media")
+
+@disconnect_page.route("/refresh")
+def refresh():
+    
+    dp_files = Db.MyStuff(session["access_token"])
+    session["dp_files"] = dp_files
+    return redirect("/media")

@@ -1,55 +1,197 @@
 {% extends 'base.html' %}
+
+
 {%block title%}My Media{%endblock%}
 
 {%block content%}
-<h1 class="heading-modal">Upload Images And Vids</h1>
-<div class="small-info">
+<section>
+
+
+
+
+  <link rel="stylesheet" href="/static/css/media.css">
+  <h1 class="heading-modal">Upload Images And Vids</h1>
+  <div class="small-info">
     Page to Upload files to DropBox and get their link to embed in editor
-    </div>
-{%if use==True %} 
-{% if token %}
-yay 
-{%endif%} 
-
-{% if not token %}
-
-<a href="https://www.dropbox.com/oauth2/authorize?client_id=8upjaiafj0gq7hh&redirect_uri=http://localhost:5000/media&response_type=code&token_access_type=offline">Login With DropBox</a>
+  </div>
+  {%if use==True %}
+  {% if token %}
+  <h5 class="heading-modal" style="margin-bottom:3%">Your Dropbox App is connected<a href="/disconnect"
+      class="s-link">Disconnect</a><a href="/refresh" class="s-link">Refresh</a></h5>
 
 
-{%endif%}
-<!-- <img src="https://www.dropbox.com/s/4rgz7y3v1309hj1/Default.png?raw=1"> -->
-{%endif%}
+  <!-- Gallery -->
+  <ul class="image-gallery">
+    {% for i in dp_files%}
 
-{%if use == 'pending' %}
-<h1 class="heading-modal">On Pending state waiting for approval</h1>
-{%endif%}
+    {% if dp_files[i][3] in ['png','jpg','jpeg','wbep','icon','xml','tiff','gif'] %}
+    <li>
+      <img src="{{dp_files[i][0]}}" alt="" />
+      <div class="overlay">
+        {{dp_files[i][2]}} <br>
+        {{dp_files[i][1]}} <br>
 
-{%if use==False%}
+
+        <div><button class="btn btn-sm btn-outline-primary" id="b-{{loop.index}}" onclick="copy('{{dp_files[i][0]}}','b-{{loop.index}}')">Copy Url</button></div><br>
+        <div><button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            onclick="SwitchModalData('{{dp_files[i][0]}}','{{dp_files[i][3]}}')">View</button></div><br>
+        <div><button class="btn btn-sm btn-outline-danger">Delete</button></div><br>
+
+
+      </div>
+    </li>
+    {%endif%}
+
+
+    {% if dp_files[i][3] in ['mp4','ogg','webm'] %}
+    <li>
+      <video src="{{dp_files[i][0]}}"></video>
+      <div class="overlay">
+        {{dp_files[i][2]}} <br>
+        {{dp_files[i][1]}} <br>
+        <div><button class="btn btn-sm btn-outline-primary" id="b-{{loop.index}}" onclick="copy('{{dp_files[i][0]}}','b-{{loop.index}}')">Copy Url</button></div><br>
+        
+        <div><button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            onclick="SwitchModalData('{{dp_files[i][0]}}','{{dp_files[i][3]}}')">View</button></div><br>
+        <div><button class="btn btn-sm btn-outline-danger">Delete</button></div><br>
 
 
 
-<form method="POST">
+
+      </div>
+    </li>
+
+    {%endif%}
+
+    {% if dp_files[i][3] not in ['mp4','ogg','webm'] and dp_files[i][3] not in
+    ['png','jpg','jpeg','wbep','icon','xml','tiff','gif']%}
+    <li>
+      <img src="https://www.iconpacks.net/icons/2/free-file-icon-1453-thumb.png" alt="" />
+      <div class="overlay">
+        {{dp_files[i][2]}} <br>
+        {{dp_files[i][1]}} <br>
+
+
+        <div><button class="btn btn-sm btn-outline-primary" id="b-{{loop.index}}" onclick="copy('{{dp_files[i][0]}}','b-{{loop.index}}')">Copy Url</button></div><br>
+        <div><button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            onclick="SwitchModalData('{{dp_files[i][0]}}','{{dp_files[i][3]}}')">View</button></div><br>
+        <div><button class="btn btn-sm btn-outline-danger">Delete</button></div><br>
+
+
+      </div>
+    </li>
     
+    {%endif%}
+
+
+
+
+
+    {%endfor%}
+  </ul>
+
+
+
+
+  {%endif%}
+
+  {% if not token %}
+
+  <center>
+    <a
+      href="https://www.dropbox.com/oauth2/authorize?client_id=8upjaiafj0gq7hh&redirect_uri=http://localhost:5000/media&response_type=code&token_access_type=offline">
+      <button class="btn btn-primary">Login With DropBox</button></a>
+  </center>
+
+  {%endif%}
+  <!-- <img src="https://www.dropbox.com/s/4rgz7y3v1309hj1/Default.png?raw=1"> -->
+  {%endif%}
+
+
+
+
+
+
+
+
+  {%if use == 'pending' %}
+  <h1 class="heading-modal">On Pending state waiting for approval</h1>
+  {%endif%}
+
+
+
+
+
+
+
+  {%if use==False%}
+
+
+
+  <form method="POST">
+
     <div class="small-info">This app is in developenment mode Enter email of your dropbox account</div>
-    {%if error%} 
+    {%if error%}
     <div class="error-box" name="fadeOut">{{error}}</div>
     {%endif%}
     <div class="mb-2">
-    
-      <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Enter Email">
+
+      <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email"
+        placeholder="Enter Email">
     </div>
- 
-      
-  
+
+
+
     <button type="submit" class="btn btn-primary mb-3 register" id="login">Submit</button>
-    
+
   </form>
 
-{%endif%}
-
-{%endblock%}
+  {%endif%}
 
 
-<!-- https://www.dropbox.com/oauth2/authorize?client_id=479mg1ei5wx7ura&redirect_uri=http://localhost:5000/media&response_type=code&token_access_type=offline -->
 
-<!-- 1mM8E2zfPSggUJTs5XPgTeuHzgllNAfAP/ -->
+  <!-- Modal -->
+  <ction class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-body" id="modal-body">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="/static/js/media.js"></script>
+
+
+</section>
+
+  {%endblock%}
+
+
+  <!-- https://www.dropbox.com/oauth2/authorize?client_id=479mg1ei5wx7ura&redirect_uri=http://localhost:5000/media&response_type=code&token_access_type=offline -->
+
+  <!-- 1mM8E2zfPSggUJTs5XPgTeuHzgllNAfAP/ -->

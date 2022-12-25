@@ -7,7 +7,7 @@ from flask_files.index import index_page
 from flask_files.notes import notes_page
 from flask_files.index_edit import index_edit_page,delete_name_page,view_page,download_name_page
 from flask_files.profile import profile_page,profile_edit_page,verify_page
-from flask_files.mymedia import media_page
+from flask_files.mymedia import media_page,disconnect_page
 from flask_files.admin import admin_page
 
 
@@ -56,6 +56,9 @@ app.register_blueprint(verify_page)
 
 
 app.register_blueprint(media_page)
+app.register_blueprint(disconnect_page)
+
+
 
 app.register_blueprint(admin_page)
 
