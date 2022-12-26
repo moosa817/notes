@@ -21,7 +21,6 @@ def Email_To(email):
     data = """{"message": {"to": {"email":"%s"},
     "content": { "title": "Verify Your Email!",  "body": "Your Verification Code is {{code}}"},"data": {"code": %s }}}""" % (email,random_no)
 
-    # print(data)
     response = requests.post('https://api.courier.com/send', headers=headers, data=data)
     return random_no
 
@@ -68,7 +67,6 @@ verify_page = blueprints.Blueprint('verified', __name__,static_folder='static',t
 
 @profile_edit_page.route("/profile_edit", methods=['GET', 'POST'])
 def profile_edit():
-    print(session["username"])
 
     if request.method == 'POST':
         username = request.form['username']
@@ -140,7 +138,6 @@ def profile_edit():
 
 
         if update_username and update_pwd:
-            print("Updating username and password")
             old_username = session["username"]
             new_username = username
             update_user(old_username, new_username)
@@ -154,7 +151,6 @@ def profile_edit():
             return jsonify({"success": "Updated username and password"})
             # update username and password
         elif update_username:
-            print("Updating username")
             old_username = session["username"]
             new_username = username
             update_user(old_username, new_username)
@@ -163,7 +159,6 @@ def profile_edit():
             
         elif update_pwd:
             # update password
-            print("updating password")
             old_password = hashed_pwd
             new_hash= bcrypt.hashpw(new_password, bcrypt.gensalt())
             update_password(old_password, new_hash)
@@ -187,21 +182,17 @@ def profile():
             username = request.form["name-url"]
 
 
-            # print(img_url, username)
             def is_url_image(image_url):
                 try:
                     image_formats = ("image/png", "image/jpeg", "image/jpg","image/gif","image/webp","image/tiff","image/vnd.microsoft.icon","image/x-icon","image/vnd.djvu","image/svg+xml")
                     r = requests.head(image_url)
-                    # print(r.headers["content-type"])
                     if r.headers["content-type"] in image_formats:
                         return True
                     return False
                 except:
                     return False
 
-            # print(is_url_image(img_url))
             if is_url_image(img_url) and username:
-                # print("here")
 
                 conn = mysql.connector.connect(
                     host=config.host,
@@ -224,7 +215,6 @@ def profile():
         elif request.form.get("del-username"):
             username = request.form["del-username"]
 
-            print("gonna have to delete",username)
             conn = mysql.connector.connect(
                     host=config.host,
                     user=config.user,
@@ -256,7 +246,6 @@ def profile():
 
 
         elif 'file' in request.files:
-            # print("here")
             def allowed_file(filename):     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
@@ -268,7 +257,6 @@ def profile():
                 flash('No selected file')
                 return redirect(request.url)
             if file and allowed_file(file.filename):
-                # print("here")
                 
                 
 

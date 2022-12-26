@@ -17,7 +17,6 @@ def get_file_extension(filename):
 
 
 def MyStuff(token):
-    print("doing this")
     dbx = dropbox.Dropbox(token)
 
     dp_files = {}
@@ -102,3 +101,10 @@ def DeleteFile(token,path):
     dbx = dropbox.Dropbox(token)
     dbx.files_delete(path)
     return True
+
+
+def write_file_to_dropbox(token, path, file_contents):
+    # Create a Dropbox API client using the access token
+    dbx = dropbox.Dropbox(token)
+    # Use the files_upload() method to write the file to Dropbox
+    dbx.files_upload(file_contents, path)

@@ -29,7 +29,6 @@ def edit_name():
         elif len(input1) > 50:
             return jsonify({'errror':"Rename failed , name too long"})
         elif not re.match(file_regex, input1):
-            print(input1)
             return jsonify({"error": "Enter a valid name."})
         else:
             

@@ -128,7 +128,6 @@ def admin():
     
 
 
-    print("here")
     return render_template("admin.html",login=False)
 
     

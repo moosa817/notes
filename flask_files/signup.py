@@ -42,7 +42,6 @@ def signup():
         emailRegex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         userRegex = "^[a-zA-Z0-9_.-]+$"
 
-        # print(username,email,pwd,confirm_pwd)
 
         if username == "" or email == "" or pwd == "" or confirm_pwd == "":
             return render_template("signup.html",error="Please fill out all the forms",email=email,username=username,pwd=pwd,confirm_pwd=confirm_pwd)

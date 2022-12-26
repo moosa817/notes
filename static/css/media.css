@@ -95,3 +95,7 @@ Responsive Image gallery Style rules
     width: 100vw !important;
     margin:0 0 0 0 !important;
   }
+  #preview img,video {
+    max-width: 100%;
+    object-fit: cover;
+  }

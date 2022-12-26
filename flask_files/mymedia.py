@@ -40,6 +40,30 @@ def media():
             # print(data)
             response = requests.post('https://api.courier.com/send', headers=headers, data=data)
     
+        if 'file-input' in request.files:
+            
+            file = request.files['file-input']
+            if file:
+                path = '/Notes-817/' + file.filename
+                g = []
+                #print(session["dp_files"])
+                for i in session["dp_files"]:
+                    g.append(session["dp_files"][i][2])
+
+                counter = 0
+                while path in g:
+                    counter = counter + 1
+                    match = re.match(r'(.+)\.([^.]+)$', path)
+                    name = match.group(1)
+                    ext = match.group(2)
+                    # print(name,ext)
+                    path = f"{name}+_copy_{counter}.{ext}"
+
+
+                # /(path)
+                file_content = file.read()
+                Db.write_file_to_dropbox(session["access_token"],path,file_content)
+                session["dp_files"] = Db.MyStuff(session["access_token"])
 
         if request.form.get("delete-file"):
             delete_file = request.form["delete-file"]
@@ -124,7 +148,7 @@ def media():
             if Db.validate_token(session["access_token"]):
                 
                 # token is good to go 
-                print("from validate token")
+                # print("from validate token")
                 if not session.get("dp_files"):
                     dp_files = Db.MyStuff(session["access_token"])
                     session["dp_files"] = dp_files

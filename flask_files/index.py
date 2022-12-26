@@ -41,7 +41,6 @@ def index():
         result = cur.execute("SELECT * FROM editor WHERE email=:email", {"email":email})
 
         result = result.fetchall()
-        # print(result)
 
         files = []
         for i in result:

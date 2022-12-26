@@ -19,22 +19,7 @@ UPLOAD_FOLDER = os.path.join(b, UPLOAD_FOLDER)
 
 # create flask app
 app = Flask(__name__)
-
-# mail = Mail(app) # instantiate the mail class
-   
-# # configuration of mail
-# app.config['MAIL_SERVER']= config.MAIL_SERVER
-# # app.config['MAIL_PORT'] = config.MAIL_PORT
-# app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
-# app.config['MAIL_PASSWORD'] = config.MAIL_PWD
-# app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
-# app.config['MAIL_USE_SSL'] = config.MAIL_USE_SSL
-
-
-
-
-
-
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 
 
 
@@ -81,4 +66,4 @@ def make_session_permanent():
 if __name__ == '__main__':
     # context = ('server.crt', 'server.key')#certificate and key files
     
-    app.run(host="0.0.0.0",debug=True, port=os.getenv("PORT", default=5000))
+    app.run(host="0.0.0.0",debug=False, port=os.getenv("PORT", default=5000))

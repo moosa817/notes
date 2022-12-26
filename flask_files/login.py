@@ -15,7 +15,6 @@ def Email_To(email):
     data = """{"message": {"to": {"email":"%s"},
     "content": { "title": "Change Your Password!",  "body": "Your Verification Code is {{code}}"},"data": {"code": %s }}}""" % (email,random_no)
 
-    # print(data)
     response = requests.post('https://api.courier.com/send', headers=headers, data=data)
     return random_no
 
