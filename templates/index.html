@@ -41,8 +41,7 @@
   
 
   
-
-  <p class="edits" style="display:inline" id="edit-{{loop.index}}">{{i}}</p>
+  <p class="edits" onclick="window.location.assign('/notes?name={{i}}');" style="display:inline" id="edit-{{loop.index}}">{{i}}</p>
   <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
   <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')"><i class="fa-solid fa-check"></i></button>
 
@@ -50,7 +49,7 @@
 
 
 
-<a href="/view/{{loop.index}}"><i class="fa-sharp fa-solid fa-eye"></i></a>
+<a href="/view?name={{i}}"><i class="fa-sharp fa-solid fa-eye"></i></a>
 
 
 
@@ -68,7 +67,7 @@
 
 
 
-<a href="/notes/{{loop.index}}"><i class="fa-sharp fa-solid fa-file-pen"></i></a>
+<a href="/notes?name={{i}}"><i class="fa-sharp fa-solid fa-file-pen"></i></a>
 
 </div>
 

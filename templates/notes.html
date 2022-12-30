@@ -230,9 +230,10 @@ Set the font-family content used for the HTML content.
     $.ajax({
       data: {
         editor_data: editor_data,
+        name:'{{file_name}}'
       },
       type: 'POST',
-      url: '/notes/'+no
+      url: '/notes'
     })
 
       .done(function (data) { 

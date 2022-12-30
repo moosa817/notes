@@ -1,0 +1,47 @@
+{%extends 'base.html'%}
+
+{%block title%}Publish Notes {%endblock%}
+
+{%block content%}
+<link rel="stylesheet" href="/static/css/publish.css">
+<div class="row">
+    <div class="col-md-6 col-sm-12 col-lg-6" id="unpublished">
+        <h3 class="heading-modal">Private Notes</h3>
+        {% for i in not_published %}
+
+
+        <div class="e-box" id="p-{{i}}">
+            <a class="p-link" href="/notes?name={{i}}">{{i}}</a>
+
+
+
+            <button class="btn-1" onclick="Publish('{{i}}','{{username}}')">Publish</button>
+
+        </div>
+        {%endfor%}
+
+    </div>
+    <div class="col-md-6  col-sm-12 col-lg-6" id="published">
+        <h3 class="heading-modal">Published Notes</h3>
+
+        {% for i in published %}
+
+        <a class="p-link" href="/notes?name={{i}}">
+            <div class="e-box" id="p-{{i}}">{{i}}
+        </a>
+        <button class="btn-1" onclick="UnPublish('{{i}}','{{username}}')">Un-Publish</button>
+        <button class="btn-1 btn-sm btn-primary" id="b-{{loop.index}}"
+            onclick="copy('/public?name={{i}}&username={{username}}','b-{{loop.index}}')">Copy Url</button>
+
+
+
+
+    </div>
+    {%endfor%}
+</div>
+</div>
+
+
+
+<script src="/static/js/publish.js"></script>
+{%endblock%}

@@ -1,4 +1,4 @@
-from flask import session,request,blueprints,jsonify,render_template
+from flask import session,request,blueprints,jsonify,render_template,redirect
 import re
 from pysqlcipher3 import dbapi2 as sqlite
 import config
@@ -16,15 +16,19 @@ delete_name_page = blueprints.Blueprint('delete_name_page ', __name__,static_fol
 @index_edit_page.route("/edit_name",methods=["POST","GET"])
 def edit_name():
     if request.method == "POST":
+
         file_regex = "^[ a-zA-Z0-9_.-]+$"
         input1 = request.form["input1"]
         input2 = request.form["input2"]
         new_input = input1
         original_input = input2
 
+
+
+
         if len(input1) == 0:
             return jsonify({"error":"Please Enter a name."})
-        elif original_input in session["files"]:
+        elif new_input in session["files"]:
             return jsonify({"error":"File Exists Give another name"})
         elif len(input1) > 50:
             return jsonify({'errror':"Rename failed , name too long"})
@@ -35,6 +39,7 @@ def edit_name():
             index = session["files"].index(original_input)
             session["files"][index] = new_input
             # add new input to database replacing it with original input
+
             conn = sqlite.connect("notes_data.db")
             cur = conn.cursor()
             cur.execute("PRAGMA key='{}'".format(config.db_pwd))
@@ -53,7 +58,7 @@ def delete_name():
             conn = sqlite.connect("notes_data.db")
             cur = conn.cursor()
             cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("DELETE FROM editor WHERE filename = :orignal_input", {"orignal_input":delete_input})
+            cur.execute("DELETE FROM editor WHERE filename = :orignal_input AND email = :email", {"orignal_input":delete_input})
             conn.commit()
             conn.close()
             return jsonify({"success":True})
@@ -68,7 +73,7 @@ def download_name():
         conn = sqlite.connect("notes_data.db")
         cur  = conn.cursor()
         cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-        cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input", {"orignal_input":download_file})
+        cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input AND email = :email", {"orignal_input":download_file,"email":session["email"]})
 
         results = cur.fetchall()
         result = results[0][0]
@@ -76,20 +81,20 @@ def download_name():
             result = ""
         return jsonify({"success":True,"data":result})
 
-@view_page.route("/view/<n>")
-def view_name(n):
-    n = int(n)
-    n = n-1
-    name = session["files"][n]
-    conn = sqlite.connect("notes_data.db")
-    cur  = conn.cursor()
-    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-    cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input", {"orignal_input":name})
+@view_page.route("/view")
+def view_name():
+    name = request.args.get("name")
+    if name:
+        conn = sqlite.connect("notes_data.db")
+        cur  = conn.cursor()
+        cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+        cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input AND email = :email", {"orignal_input":name,"email":session["email"]})
 
-    results = cur.fetchall()
-    result = results[0][0]
-    if result == None:
-        result = ""
+        results = cur.fetchall()
+        result = results[0][0]
+        if result == None:
+            result = ""
 
-    return render_template("view.html",stuff=result,file_name=name)
-
+        return render_template("view.html",stuff=result,file_name=name)
+    else:
+        return redirect("/")

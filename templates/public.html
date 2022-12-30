@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+
+{%block title%} Public Notes {%endblock%}
+
+
+{% block content %}
+{% if show %}
+
+
+
+
+<a href="/public" class="go-back"> <i class="fa fa-solid fa-arrow-left"></i>Go Back</a>
+<div class="file_heading">View {{filename}} </div>
+<div class="text-center">by {{username}}</div>
+
+<button onclick="download('{{filename}}')" class="btn btn-primary"><i class="fa-solid fa-download"></i> Download</i></button>
+<hr>
+
+<div style="width:100%;border:1px solid black; padding:10px;" id="editorData">
+
+{{editor_data | safe}}
+
+</div>
+
+{%endif%}
+<script src="/static/js/publish.js"></script>
+{% endblock %}

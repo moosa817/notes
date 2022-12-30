@@ -9,7 +9,7 @@ from flask_files.index_edit import index_edit_page,delete_name_page,view_page,do
 from flask_files.profile import profile_page,profile_edit_page,verify_page
 from flask_files.mymedia import media_page,disconnect_page
 from flask_files.admin import admin_page
-
+from flask_files.publish import publish_page
 
 
 UPLOAD_FOLDER = 'static/imgs'
@@ -43,7 +43,7 @@ app.register_blueprint(verify_page)
 app.register_blueprint(media_page)
 app.register_blueprint(disconnect_page)
 
-
+app.register_blueprint(publish_page)
 
 app.register_blueprint(admin_page)
 
@@ -65,5 +65,4 @@ def make_session_permanent():
 
 if __name__ == '__main__':
     # context = ('server.crt', 'server.key')#certificate and key files
-    
-    app.run(host="0.0.0.0",debug=False, port=os.getenv("PORT", default=5000))
+    app.run(host="0.0.0.0",debug=True, port=os.getenv("PORT", default=5000))

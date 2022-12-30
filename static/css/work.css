@@ -184,7 +184,9 @@
 .files-icons{
   float:right;
 }
-
+.edits:hover{
+  cursor: pointer;
+}
 
 .files a{
   border: 1px solid black;

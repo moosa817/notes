@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS `editor` (
     `id`INTERGER PRIMARY KEY,
     `email` TEXT NOT NULL,
     `filename` TEXT NOT NULL,
-    `editor_data` TEXT
+    `published` TEXT,
+    `editor_data` TEXT,
 )
 
 CREATE TABLE IF NOT EXISTS `use_media`(
