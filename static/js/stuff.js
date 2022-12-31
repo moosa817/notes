@@ -126,7 +126,7 @@ function download(filename, text) {
 
   element.click();
 
-  document.body.removeChild(element);
+  element.remove()
 }
 
 
@@ -136,7 +136,9 @@ function download(filename, text) {
 
 // file download 
 var file_name
+var filename,editor_data
 function download_name(id){
+
   file_name = document.getElementById(id).innerHTML
   $.ajax({
     data: {
@@ -147,8 +149,46 @@ function download_name(id){
   })
 .done(function (data) {
  if(data.success === true){
-  filename = file_name+".html"
-    download(filename,data.data)
+
+  filename = file_name
+  editor_data = data.data
+ }
+})
+
+}
+function DownloadHtml(){
+  download(filename+'.html',editor_data)
+}
+
+function downloadFile(filename, base64Url) {
+  var a = document.createElement("a"); //Create <a>
+    a.href = base64Url //Image Base64 Goes here
+    a.download = filename; //File name Here
+    a.click(); //Downloaded file
+    a.remove();
+
+}
+
+
+
+
+
+
+
+
+
+function DownloadPdf(){
+  $.ajax({
+    data: {
+      filename: filename,
+      editor_data:editor_data
+    },
+    type: 'POST',
+    url: '/download_pdf'
+  })
+.done(function (data) {
+ if(data.success === true){
+  downloadFile(filename+'.pdf',data.pdf_download)
  }
 })
 

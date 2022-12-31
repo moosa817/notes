@@ -2,7 +2,8 @@ from flask import session,request,blueprints,jsonify,render_template,redirect
 import re
 from pysqlcipher3 import dbapi2 as sqlite
 import config
-
+import weasyprint
+import base64
 
 index_edit_page = blueprints.Blueprint('index_edit_page', __name__,static_folder='static',template_folder='templates')
 
@@ -98,3 +99,18 @@ def view_name():
         return render_template("view.html",stuff=result,file_name=name)
     else:
         return redirect("/")
+
+@index_edit_page.route("/download_pdf",methods=["GET","POST"])
+def dPDF():
+    if request.method == "POST":
+        filename = request.form["filename"]
+        editor_data = request.form["editor_data"]
+
+        # Create a PDF from the HTML text
+        pdf = weasyprint.HTML(string=editor_data).write_pdf()
+
+        # Save the PDF to a file
+        
+        base64_data = base64.b64encode(pdf).decode('utf-8')
+        data_url = 'data:application/pdf;base64,' + base64_data
+        return jsonify({"success":True,'pdf_download':data_url})

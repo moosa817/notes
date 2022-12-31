@@ -88,3 +88,9 @@ for (var i = 0; i < elements.length; i++) {
     }
   })
 };
+
+function SwitchView(id) {
+  elem = document.getElementById(id)
+  elem.innerHTML = elem.getAttribute('data')
+
+}

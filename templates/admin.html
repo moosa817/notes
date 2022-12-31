@@ -58,6 +58,7 @@
       <th scope="col">#</th>
       <th scope="col">Email</th>
       <th scope="col">Filename</th>
+      <th scope="col">Is Public</th>
       <th scope="col">Editor Data</th>
     </tr>
   </thead>
@@ -70,6 +71,7 @@
         <th scope="row">{{ids[loop.index-1]}}</th>
         <td>{{email[loop.index-1]}}</td>
         <td>{{i}}</td>
+        <td>{{is_public[loop.index-1]}}</td>
         <td id="{{loop.index}}" data="{{editor_data[loop.index-1]}}"><a class="s" onclick="SwitchView('{{loop.index}}')">Show</a></td>
 
       </tr>

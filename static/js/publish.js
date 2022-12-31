@@ -87,10 +87,7 @@ function copy(url,id){
 }
 
 
-function download(filename) {
-  filename = filename + '.html'
-  text = document.getElementById('editorData').innerHTML
-  console.log("here")
+function download(filename, text) {
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
   element.setAttribute('download', filename);
@@ -101,4 +98,50 @@ function download(filename) {
   element.click();
 
   document.body.removeChild(element);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+var editor_data = document.getElementById('editorData').innerHTML
+
+
+function DownloadHtml(filename){
+  download(filename+'.html',editor_data)
+}
+
+function downloadFile(filename, base64Url) {
+  var a = document.createElement("a"); //Create <a>
+    a.href = base64Url //Image Base64 Goes here
+    a.download = filename; //File name Here
+    a.click(); //Downloaded file
+    a.remove();
+
+}
+
+
+function DownloadPdf(filename){
+  $.ajax({
+    data: {
+      filename: filename,
+      editor_data:editor_data
+    },
+    type: 'POST',
+    url: '/download_pdf'
+  })
+.done(function (data) {
+ if(data.success === true){
+  downloadFile(filename+'.pdf',data.pdf_download)
+ }
+})
+
 }

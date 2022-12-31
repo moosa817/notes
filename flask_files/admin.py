@@ -80,17 +80,22 @@ def admin():
             email = []
             filename = []
             editor_data = []
+            is_public = []
             id = 0
             ids = []
+            print(result)
             for i in result:
                 id = id+1
                 ids.append(id) 
                 email.append(i[1])
                 filename.append(i[2])
-                editor_data.append(i[3])
+                is_public.append(i[3])
+                editor_data.append(i[4])
 
-        
-            return render_template("admin.html",login=True,ids=ids,email=email,filename=filename,editor_data=editor_data,page1=True)
+
+
+            print(editor_data)
+            return render_template("admin.html",login=True,ids=ids,email=email,filename=filename,editor_data=editor_data,page1=True,is_public=is_public)
 
         elif page == "verify":
             conn = sqlite.connect("notes_data.db")
