@@ -31,7 +31,7 @@
         </a>
         <button class="btn-1" onclick="UnPublish('{{i}}','{{username}}')">Un-Publish</button>
         <button class="btn-1 btn-sm btn-primary" id="b-{{loop.index}}"
-            onclick="copy('/public?name={{i}}&username={{username}}','b-{{loop.index}}')">Copy Url</button>
+            onclick="copy(`/public?name={{i.replace(' ','%20')}}&username={{username}}`,'b-{{loop.index}}')">Copy Url</button>
 
 
 

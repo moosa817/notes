@@ -6,6 +6,25 @@ import mysql.connector
 
 publish_page = blueprints.Blueprint('publish', __name__,static_folder='static',template_folder='templates')
 
+def EmailToUsername(email_list):
+    conn = mysql.connector.connect(
+        host=config.host,
+        user=config.user,
+        passwd=config.passwd,
+        database=config.database)
+    cursor = conn.cursor()
+    sql = f"SELECT username FROM notes WHERE email in {tuple(email_list)}"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    conn.close()
+    users = []
+    for i in results:
+        users.append(i[0])
+
+    return users
+
+
+
 
 @publish_page.route("/publish",methods=["GET","POST"])
 def publish():
@@ -123,4 +142,29 @@ def public():
 
 
     #normally return public.html
+    conn = sqlite.connect("notes_data.db")
+    cur = conn.cursor()
+    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+    cur.execute("SELECT email,filename,editor_data FROM editor WHERE published='True'")
+
+    result = cur.fetchall()
+    conn.close()
+    emails = []
+    filenames = []
+    editor_data = []
+
+    for i in result:
+        emails.append(i[0])
+        filenames.append(i[1])
+        editor_data.append(i[2])
+
+    users = EmailToUsername(emails)
+
+    if session.get("username"):
+        return render_template("public.html",user=users,files=filenames,editor_data=editor_data,username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"])
+    else:
+        return render_template("public.html",users=users,files=filenames,editor_data=editor_data)
+
+
+
     return render_template("public.html")

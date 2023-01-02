@@ -43,7 +43,7 @@
   
 
   
-  <p class="edits" onclick="window.location.assign(`/notes?name={{i.replace(' ','%20')}}`);" style="display:inline" id="edit-{{loop.index}}">{{i}}</p>
+  <p class="edits" style="display:inline;cursor:text;" id="edit-{{loop.index}}">{{i}}</p>
   <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
   <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')"><i class="fa-solid fa-check"></i></button>
 

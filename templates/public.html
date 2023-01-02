@@ -4,6 +4,48 @@
 
 
 {% block content %}
+<link rel="stylesheet" href="/static/css/publish.css">
+
+
+{% if not show %}
+<h1 class="text-center">Public Notes</h1>
+
+{%for i in files%} 
+
+
+
+
+<div class="public-box" id="{{i}}">
+
+    <div>
+  <a style="text-decoration: none;" href="/public?name={{i.replace(' ','%20')}}&username={{user[loop.index-1]}}">  {{i}}</a>
+<br>
+  From user: {{user[loop.index-1]}}
+</div>
+
+<div>
+
+
+    <a style="text-decoration: none;" href="/public?name={{i.replace(' ','%20')}}&username={{user[loop.index-1]}}"> 
+<button class="btn btn-primary">View</button>
+    
+    </a>
+
+<button class="btn btn-success" id="b-{{loop.index}}"
+            onclick="copy(`/public?name={{i.replace(' ','%20')}}&username={{user[loop.index-1]}}`,'b-{{loop.index}}')">Copy Url</button>
+
+</div>
+
+
+</div>
+
+
+{%endfor%}
+
+
+
+
+{%endif%}
 {% if show %}
 
 
