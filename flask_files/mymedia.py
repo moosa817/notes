@@ -1,4 +1,4 @@
-from flask import session,request,blueprints,redirect,url_for,render_template
+from flask import session,request,blueprints,redirect,url_for,render_template,jsonify
 from pysqlcipher3 import dbapi2 as sqlite
 import config
 from flask import current_app
@@ -16,6 +16,13 @@ disconnect_page = blueprints.Blueprint('disconnect_page', __name__,static_folder
 def media():
     if session.get("username"):
         if request.method == "POST":
+            if request.form.get("sync"):
+                try:
+                    mytime = Db.SyncThings(session["access_token"],session["email"])
+                    return jsonify({"success":True,"time":mytime})
+                except Exception as e:
+                    print(e)
+                    return jsonify({"success":False})
             if request.form.get("email"):
                 email = request.form["email"]
                 emailRegex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -138,10 +145,13 @@ def media():
                     
                     
                     dp_files = Db.MyStuff(session["access_token"])
+
+
+                    sync_time = Db.SyncStuff(session["email"])
                     
                     session["dp_files"] = dp_files
 
-                    return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files)
+                    return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files,sync_time=sync_time)
                 else:
                     return redirect('/media')
 
@@ -155,7 +165,11 @@ def media():
                         session["dp_files"] = dp_files
                     else:
                         dp_files = session["dp_files"]
-                    return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files)
+                        sync_time = Db.SyncStuff(session["email"])
+
+
+
+                    return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files,sync_time=sync_time)
                     
                 else:
                     # refresh token
@@ -171,7 +185,10 @@ def media():
                     else:
                         dp_files = session["dp_files"]
 
-                    return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files)
+
+                    sync_time = Db.SyncStuff(session["email"])
+
+                    return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],token=True,use=True,dp_files=dp_files,sync_time=sync_time)
 
             else:
                 return render_template("mymedia.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],use=True,token=False)

@@ -21,6 +21,8 @@
 
     <center>
     <button class="btn btn-primary mb-5" onclick="UploadShow()" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Files</button>
+
+    <button class="btn btn-success ml-3 mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal1">Sync Notes Files</button>
   </center>
   <!-- Gallery -->
   <ul class="image-gallery">
@@ -105,7 +107,7 @@
   <center>
     <a
       href="https://www.dropbox.com/oauth2/authorize?client_id=8upjaiafj0gq7hh&redirect_uri=http://localhost:5000/media&response_type=code&token_access_type=offline">
-      <button class="btn btn-primary">Login With DropBox</button></a>
+      <button class="btn btn-primary mb-5">Login With DropBox</button></a>
   </center>
 
   {%endif%}
@@ -120,7 +122,7 @@
 
 
   {%if use == 'pending' %}
-  <h1 class="heading-modal">On Pending state waiting for approval</h1>
+  <h1 class="heading-modal mb-5">On Pending state waiting for approval</h1>
   {%endif%}
 
 
@@ -169,6 +171,35 @@
       </div>
     </div>
 
+
+
+<!-- sync Modal -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        <div class="modal-body" id="modal-body">
+            <h3 style="text-align: center;">Sync Files</h3>
+            <hr>
+            {% for i in files %} 
+              
+            
+            <div>{{i}}</div><hr>
+
+
+
+            {%endfor%}
+
+            <button id="sync" class="btn btn-success">Sync All Files</button>
+            <div>Last Sync Was on <span id="synctime">{{sync_time}}</span></div>
+            <hr>
+            Note: Html files synced in /Notes-html , Pdf files in /Notes-pdf , and media in /Notes-817 in your Dropbox
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 

@@ -21,3 +21,8 @@ CREATE TABLE IF NOT EXISTS `use_media`(
     `email_to_use` TEXT NOT NULL,
     `status` TEXT
 )
+CREATE TABLE IF NOT EXISTS `sync` (
+     `id` INTERGER PRIMARY KEY,
+     `email` TEXT NOT NULL,
+     `sync_time` TEXT NOT NULL
+ );

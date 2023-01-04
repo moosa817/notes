@@ -3,6 +3,12 @@ import requests
 import base64
 import dropbox
 import re
+from pysqlcipher3 import dbapi2 as sqlite
+import weasyprint
+import time
+from dropbox.files import WriteMode
+
+
 
 def get_file_extension(filename):
     # Use a regular expression to search for the pattern of a file extension
@@ -107,4 +113,73 @@ def write_file_to_dropbox(token, path, file_contents):
     # Create a Dropbox API client using the access token
     dbx = dropbox.Dropbox(token)
     # Use the files_upload() method to write the file to Dropbox
-    dbx.files_upload(file_contents, path)
+    dbx.files_upload(file_contents, path, mode=WriteMode.overwrite)
+
+
+def SyncStuff(email):
+    conn = sqlite.connect("notes_data.db")
+    cur = conn.cursor()
+    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+    cur.execute("SELECT * FROM sync WHERE email= :email ",{"email":email}) 
+
+
+    result = cur.fetchall()
+    if not result:
+        cur.execute("INSERT INTO sync ('email','sync_time') VALUES (:email , :time)",{"email":email,"time":'0'})
+        conn.commit()
+        return '0'
+    else:        
+        
+        for i in result:
+            sync_time = i[2]
+
+    conn.close()       
+    return sync_time
+
+def SyncThings(token,email):
+    file_exist = False
+    file2_exist = False
+    dbx = dropbox.Dropbox(token)
+    for entry in dbx.files_list_folder('').entries:
+        if entry.name == 'Notes-html':
+            file_exist = True
+        if entry.name == 'Notes-pdf':
+            file2_exist = True
+
+    if not file_exist:
+        dbx.files_create_folder('/Notes-html')
+  
+    if not file2_exist:
+        dbx.files_create_folder('/Notes-pdf')
+
+    conn = sqlite.connect('notes_data.db')
+    cur = conn.cursor()
+
+    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+
+    cur.execute("SELECT filename,editor_Data FROM editor WHERE email = :email",{"email":email})
+
+    result = cur.fetchall()    
+    files = []
+    editor_data = []
+    for i in result:
+        files.append(i[0])
+        editor_data.append(i[1].encode('utf-8'))
+
+
+    # html 
+    for g in range(len(files)):
+        path = '/Notes-html/'+files[g]+".html"
+        write_file_to_dropbox(token,path,editor_data[g])
+
+        pdf = weasyprint.HTML(string=editor_data[g]).write_pdf()
+        pdf_path = '/Notes-pdf/'+files[g]+".pdf"
+        write_file_to_dropbox(token,pdf_path,pdf)
+
+    mytime = time.ctime()
+    print(mytime)
+    cur.execute("UPDATE sync SET sync_time = :time",{"time":mytime})
+    conn.commit()
+    conn.close()
+
+    return mytime
