@@ -1,6 +1,5 @@
 from flask import Flask,session
 import os
-import config
 from flask_files.signup import signup_page
 from flask_files.login import login_page,reset_page
 from flask_files.index import index_page
@@ -14,7 +13,6 @@ from flask_files.publish import publish_page
 
 UPLOAD_FOLDER = 'static/imgs'
 b = os.getcwd()
-# print(os.listdir())
 UPLOAD_FOLDER = os.path.join(b, UPLOAD_FOLDER) 
 
 # create flask app
@@ -64,5 +62,4 @@ def make_session_permanent():
 
 
 if __name__ == '__main__':
-    # context = ('server.crt', 'server.key')#certificate and key files
     app.run(host="0.0.0.0",debug=True, port=os.getenv("PORT", default=5000))

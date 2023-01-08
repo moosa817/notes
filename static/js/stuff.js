@@ -52,8 +52,8 @@ function StopEditable(id) {
   input1 = input1.replace(/&nbsp;/g,'');
   input2 = input2.replace(/&nbsp;/g,'');
 
-  console.log(input1)
-  console.log(input2)
+  // console.log(input1)
+  // console.log(input2)
 
   $.ajax({
     data: {
@@ -109,7 +109,7 @@ function delete_name(){
 .done(function (data) {
  if (data.success === true){
   e_id = "f-"+id_no
-  console.log(e_id)
+  // console.log(e_id)
   document.getElementById(e_id).remove()
 }
 })};

@@ -1,10 +1,11 @@
-from flask import session,request,blueprints,redirect,url_for,render_template,jsonify
-import re
+from flask import session, request, blueprints, redirect, url_for, render_template, jsonify
 from pysqlcipher3 import dbapi2 as sqlite
 import config
 import mysql.connector
 
-publish_page = blueprints.Blueprint('publish', __name__,static_folder='static',template_folder='templates')
+publish_page = blueprints.Blueprint(
+    'publish', __name__, static_folder='static', template_folder='templates')
+
 
 def EmailToUsername(email_list):
     conn = mysql.connector.connect(
@@ -24,9 +25,7 @@ def EmailToUsername(email_list):
     return users
 
 
-
-
-@publish_page.route("/publish",methods=["GET","POST"])
+@publish_page.route("/publish", methods=["GET", "POST"])
 def publish():
     if session.get("username"):
         if request.method == "POST":
@@ -36,16 +35,15 @@ def publish():
                     conn = sqlite.connect("notes_data.db")
                     cur = conn.cursor()
                     cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-                    cur.execute("UPDATE editor SET published=:published WHERE email = :email AND filename=:filename", {"published":'True',"email":session["email"],"filename":to_publish})
+                    cur.execute("UPDATE editor SET published=:published WHERE email = :email AND filename=:filename", {
+                                "published": 'True', "email": session["email"], "filename": to_publish})
                     conn.commit()
                     conn.close()
 
-
-                    return jsonify({"success":True})
+                    return jsonify({"success": True})
                 except Exception as E:
-                    print(E)
                     return jsonify({"success": False})
-                
+
     # un_publish
             if request.form.get("un_publish"):
                 to_publish = request.form.get("un_publish")
@@ -53,30 +51,23 @@ def publish():
                     conn = sqlite.connect("notes_data.db")
                     cur = conn.cursor()
                     cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-                    cur.execute("UPDATE editor SET published=:published WHERE email = :email AND filename=:filename", {"published":None,"email":session["email"],"filename":to_publish})
+                    cur.execute("UPDATE editor SET published=:published WHERE email = :email AND filename=:filename", {
+                                "published": None, "email": session["email"], "filename": to_publish})
                     conn.commit()
                     conn.close()
 
-
-                    return jsonify({"success":True})
+                    return jsonify({"success": True})
                 except Exception as E:
-                    print(E)
-
                     return jsonify({"success": False})
-            
-
-
 
         conn = sqlite.connect("notes_data.db")
         cur = conn.cursor()
         cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-        cur.execute("SELECT * FROM editor WHERE email=:email", {"email":session["email"]})
-        
-
+        cur.execute("SELECT * FROM editor WHERE email=:email",
+                    {"email": session["email"]})
 
         not_verified = []
         verified = []
-
 
         result = cur.fetchall()
         for i in result:
@@ -88,25 +79,25 @@ def publish():
         published = verified
         not_published = not_verified
 
-        return render_template("publish.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],published=published,not_published=not_published)
+        return render_template("publish.html", username=session["username"], email=session["email"], verified=session["verified"], pfp=session["pfp"], files=session["files"], published=published, not_published=not_published)
     else:
         return render_template("index.html")
 
 
-@publish_page.route("/public",methods=["GET"])
+@publish_page.route("/public", methods=["GET"])
 def public():
     g = request.args.get("name")
     u = request.args.get("username")
     if g and u:
         conn = mysql.connector.connect(
-        host=config.host,
-        user=config.user,
-        passwd=config.passwd,
-        database=config.database)
+            host=config.host,
+            user=config.user,
+            passwd=config.passwd,
+            database=config.database)
         cursor = conn.cursor()
         sql = "SELECT email FROM notes WHERE username = %s"
         val = (u,)
-        cursor.execute(sql,val)
+        cursor.execute(sql, val)
         email = cursor.fetchone()
         conn.close()
 
@@ -115,9 +106,8 @@ def public():
             conn = sqlite.connect("notes_data.db")
             cur = conn.cursor()
             cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("SELECT filename,editor_data FROM editor WHERE published='True' AND filename = :filename AND email = :email",{"filename":g,"email":email})
-
-
+            cur.execute("SELECT filename,editor_data FROM editor WHERE published='True' AND filename = :filename AND email = :email", {
+                        "filename": g, "email": email})
 
             result = cur.fetchall()
             conn.close()
@@ -128,24 +118,20 @@ def public():
                     editor_data = ""
                 # print(filename,editor_data)
                 if session.get("username"):
-                    return render_template("public.html",user=u,filename=filename,editor_data=editor_data,username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],show=True)
+                    return render_template("public.html", user=u, filename=filename, editor_data=editor_data, username=session["username"], email=session["email"], verified=session["verified"], pfp=session["pfp"], files=session["files"], show=True)
                 else:
-                    return render_template("public.html",user=u,filename=filename,editor_data=editor_data,show=True)
+                    return render_template("public.html", user=u, filename=filename, editor_data=editor_data, show=True)
             else:
                 return redirect("/public")
 
-
-          
         return redirect("/public")
 
-
-
-
-    #normally return public.html
+    # normally return public.html
     conn = sqlite.connect("notes_data.db")
     cur = conn.cursor()
     cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-    cur.execute("SELECT email,filename,editor_data FROM editor WHERE published='True'")
+    cur.execute(
+        "SELECT email,filename,editor_data FROM editor WHERE published='True'")
 
     result = cur.fetchall()
     conn.close()
@@ -161,10 +147,8 @@ def public():
     users = EmailToUsername(emails)
 
     if session.get("username"):
-        return render_template("public.html",user=users,files=filenames,editor_data=editor_data,username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"])
+        return render_template("public.html", user=users, files=filenames, editor_data=editor_data, username=session["username"], email=session["email"], verified=session["verified"], pfp=session["pfp"])
     else:
-        return render_template("public.html",users=users,files=filenames,editor_data=editor_data)
-
-
+        return render_template("public.html", users=users, files=filenames, editor_data=editor_data)
 
     return render_template("public.html")

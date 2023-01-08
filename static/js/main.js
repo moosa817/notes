@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 $(document).ready(function() {
 n = localStorage.getItem('theme');
-console.log(n)
+// console.log(n)
 
 if (n== null){
   n = 0;
@@ -65,7 +65,7 @@ checkbox.addEventListener('change', ()=>{
     n = 0;
     localStorage.setItem('theme', n);
   }
-  console.log(localStorage.getItem('theme'))
+  // console.log(localStorage.getItem('theme'))
 
 
 

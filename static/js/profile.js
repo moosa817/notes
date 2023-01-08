@@ -52,11 +52,11 @@ $('#add').click(function(){
   // $('[name="thumbnail"]').on('change', function() {
     p = document.getElementById('url').value
     document.getElementById('url-error').style.display = 'none';
-    console.log(p)
+    // console.log(p)
   
     a = $('img.preview').prop('src', p);
     document.getElementById('url-submit').style.display = 'block';
-    console.log(a)
+    // console.log(a)
   });
 
 
@@ -90,7 +90,7 @@ function update(){
     url: '/profile_edit'
   })
 .done(function (data) {
-  console.log(data)
+  // console.log(data)
   if(data.error){
   document.getElementById('edit-success').style.display = 'none'
 
@@ -143,7 +143,7 @@ $.ajax({
 
 
 function checkCode(){
-  console.log("clicked")
+  // console.log("clicked")
   code_value = document.getElementById("code").value
   $.ajax({
     data: {

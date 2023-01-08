@@ -14,7 +14,7 @@ function SwitchModalData(url, type) {
 
 function copy(url, id) {
   element = document.getElementById(id)
-  console.log(url, id)
+  // console.log(url, id)
   navigator.clipboard.writeText(url)
   element.innerHTML = "Copied"
   setTimeout(() => {
@@ -32,7 +32,7 @@ function ShowDelete(path) {
 	
 	`
 
-  console.log("name")
+  // console.log("name")
 }
 
 

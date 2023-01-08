@@ -1,13 +1,14 @@
-host="bjqtzu6iqlygtaipf3ql-mysql.services.clever-cloud.com"
-user="ub62jr4whahhszbd"
-passwd="6gekFxLS0jJP49hmeWRa"
-database="bjqtzu6iqlygtaipf3ql"
+import os
 
 
-db_pwd = "sk96Jaffasaladflask"
+host = os.getenv("host",default=None)
+user = os.getenv("houserst",default=None)
+passwd = os.getenv("passwd",default=None)
+database = os.getenv("database",default=None)
 
-courier_api = 'pk_prod_1SGD37TKXCMPFXMW21SSPM80F9SH'
+db_pwd = os.getenv("db_pwd",default=None)
+courier_api = os.getenv("courier_api",default=None)
 
-myemail = "computerknowledge817@gmail.com"
-drop_box_id = '8upjaiafj0gq7hh'
-drop_box_pwd = 'xashkwonpdcg30o'
+myemail = os.getenv("myemail",default=None)
+drop_box_id = os.getenv("drop_box_id",default=None)
+drop_box_pwd = os.getenv("drop_box_pwd",default=None)

@@ -27,7 +27,7 @@ function Publish(id,u){
         
         
           `
-          console.log(new_element)
+          // console.log(new_element)
       
     
         document.getElementById("published").appendChild(new_element)
@@ -44,7 +44,7 @@ function UnPublish(id,u){
 
 
 
-  console.log(e.innerHTML)
+  // console.log(e.innerHTML)
 
 
 

@@ -9,7 +9,6 @@ import time
 from dropbox.files import WriteMode
 
 
-
 def get_file_extension(filename):
     # Use a regular expression to search for the pattern of a file extension
     match = re.search(r'\.([^.]+)$', filename)
@@ -21,12 +20,10 @@ def get_file_extension(filename):
         return None
 
 
-
 def MyStuff(token):
     dbx = dropbox.Dropbox(token)
 
     dp_files = {}
-
 
     file_exist = False
     for entry in dbx.files_list_folder('').entries:
@@ -36,50 +33,41 @@ def MyStuff(token):
     if not file_exist:
         dbx.files_create_folder('/Notes-817')
 
-
     for entry in dbx.files_list_folder('/Notes-817').entries:
         url = dbx.sharing_create_shared_link(entry.path_display).url
 
-
-
-
-        url,_ = url.split("?")
+        url, _ = url.split("?")
         type = get_file_extension(url)
 
         url = url+"?raw=1"
-        
 
-
-
-    
         size = entry.size
         size = (size/1024)/1024
-        size = round(size,2)
+        size = round(size, 2)
         size = str(size)+' MB'
 
-        dp_files[entry.name] = [url,size,entry.path_display,type]
-
-
-
+        dp_files[entry.name] = [url, size, entry.path_display, type]
 
     return dp_files
+
 
 def validate_token(token):
 
     header = {
         "Authorization": f"Bearer {token}",
-        "Content-Type":"application/json"
+        "Content-Type": "application/json"
     }
     data = {
         "query": "balls"
     }
 
-
-    r = requests.post("https://api.dropboxapi.com/2/check/user",headers=header,json=data)
+    r = requests.post("https://api.dropboxapi.com/2/check/user",
+                      headers=header, json=data)
     if r.status_code == 200:
         return True
     else:
         return False
+
 
 def RefreshToken(refresh_token):
     client_creds = f"{config.drop_box_id}:{config.drop_box_pwd}"
@@ -90,20 +78,19 @@ def RefreshToken(refresh_token):
     }
 
     data = {
-        "refresh_token":refresh_token,
-        "grant_type":"refresh_token"
-        }
+        "refresh_token": refresh_token,
+        "grant_type": "refresh_token"
+    }
 
-
-    r = requests.post("https://api.dropboxapi.com/oauth2/token",headers=headers,data=data)
-
+    r = requests.post("https://api.dropboxapi.com/oauth2/token",
+                      headers=headers, data=data)
 
     stuff = r.json()
     access_token = stuff["access_token"]
     return access_token
 
 
-def DeleteFile(token,path):
+def DeleteFile(token, path):
     dbx = dropbox.Dropbox(token)
     dbx.files_delete(path)
     return True
@@ -120,23 +107,24 @@ def SyncStuff(email):
     conn = sqlite.connect("notes_data.db")
     cur = conn.cursor()
     cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-    cur.execute("SELECT * FROM sync WHERE email= :email ",{"email":email}) 
-
+    cur.execute("SELECT * FROM sync WHERE email= :email ", {"email": email})
 
     result = cur.fetchall()
     if not result:
-        cur.execute("INSERT INTO sync ('email','sync_time') VALUES (:email , :time)",{"email":email,"time":'0'})
+        cur.execute("INSERT INTO sync ('email','sync_time') VALUES (:email , :time)", {
+                    "email": email, "time": '0'})
         conn.commit()
         return '0'
-    else:        
-        
+    else:
+
         for i in result:
             sync_time = i[2]
 
-    conn.close()       
+    conn.close()
     return sync_time
 
-def SyncThings(token,email):
+
+def SyncThings(token, email):
     file_exist = False
     file2_exist = False
     dbx = dropbox.Dropbox(token)
@@ -148,7 +136,7 @@ def SyncThings(token,email):
 
     if not file_exist:
         dbx.files_create_folder('/Notes-html')
-  
+
     if not file2_exist:
         dbx.files_create_folder('/Notes-pdf')
 
@@ -157,28 +145,28 @@ def SyncThings(token,email):
 
     cur.execute("PRAGMA key='{}'".format(config.db_pwd))
 
-    cur.execute("SELECT filename,editor_Data FROM editor WHERE email = :email",{"email":email})
+    cur.execute("SELECT filename,editor_Data FROM editor WHERE email = :email", {
+                "email": email})
 
-    result = cur.fetchall()    
+    result = cur.fetchall()
     files = []
     editor_data = []
     for i in result:
         files.append(i[0])
         editor_data.append(i[1].encode('utf-8'))
 
-
-    # html 
+    # html
     for g in range(len(files)):
         path = '/Notes-html/'+files[g]+".html"
-        write_file_to_dropbox(token,path,editor_data[g])
+        write_file_to_dropbox(token, path, editor_data[g])
 
         pdf = weasyprint.HTML(string=editor_data[g]).write_pdf()
         pdf_path = '/Notes-pdf/'+files[g]+".pdf"
-        write_file_to_dropbox(token,pdf_path,pdf)
+        write_file_to_dropbox(token, pdf_path, pdf)
 
     mytime = time.ctime()
     print(mytime)
-    cur.execute("UPDATE sync SET sync_time = :time",{"time":mytime})
+    cur.execute("UPDATE sync SET sync_time = :time", {"time": mytime})
     conn.commit()
     conn.close()
 
