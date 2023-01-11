@@ -64,7 +64,7 @@ def media():
                         match = re.match(r'(.+)\.([^.]+)$', path)
                         name = match.group(1)
                         ext = match.group(2)
-                        path = f"{name}+_copy_{counter}.{ext}"
+                        path = f"{name}{counter}.{ext}"
 
                     file_content = file.read()
                     Db.write_file_to_dropbox(

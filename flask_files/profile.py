@@ -9,6 +9,7 @@ import re
 import bcrypt
 from pysqlcipher3 import dbapi2 as sqlite
 import random
+from flask_files import dropbox_stuff as Dp
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'tiff'])
 
@@ -242,10 +243,8 @@ def profile():
             if file and allowed_file(file.filename):
 
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(
-                    current_app.config['UPLOAD_FOLDER'], filename))
-
-                filename = "static/imgs/" + filename
+                img_url = Dp.upload_pfp(config.drop_token,filename,file.read())
+                print(img_url)
                 conn = mysql.connector.connect(
                     host=config.host,
                     user=config.user,
@@ -253,10 +252,11 @@ def profile():
                     database=config.database)
                 cur = conn.cursor()
 
-                session["pfp"] = filename
+                session["pfp"] = img_url
+
 
                 sql = "UPDATE notes SET pfp = '%s' WHERE username= '%s'"
-                val = (filename, username)
+                val = (img_url, username)
                 cur.execute(sql % val)
                 conn.commit()
                 conn.close()

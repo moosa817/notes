@@ -171,3 +171,25 @@ def SyncThings(token, email):
     conn.close()
 
     return mytime
+
+#using dropbox as service for uploading pfp using own token
+def upload_pfp(token,path,file_contents):
+    dbx = dropbox.Dropbox(token)
+    g=[]
+    for entry in dbx.files_list_folder('/projects/notes').entries:
+        g.append(entry.name)
+        counter = 0
+    while path in g:
+        counter = counter + 1
+        match = re.match(r'(.+)\.([^.]+)$', path)
+        name = match.group(1)
+        ext = match.group(2)
+        path = f"{name}{counter}.{ext}"
+
+    path = "/projects/notes/" + path
+    dbx.files_upload(file_contents, path, mode=WriteMode.overwrite)
+
+
+    url = dbx.sharing_create_shared_link(path).url
+    url = url.replace("?dl=0","?raw=1")
+    return url
