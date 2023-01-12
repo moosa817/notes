@@ -1,7 +1,13 @@
 from flask import session, request, blueprints, redirect, url_for, render_template, jsonify
-from pysqlcipher3 import dbapi2 as sqlite
 import config
 import mysql.connector
+from pymongo import MongoClient
+
+
+client = MongoClient(config.mongo_str)
+db = client.get_database('notes')
+records = db.notes_data
+
 
 publish_page = blueprints.Blueprint(
     'publish', __name__, static_folder='static', template_folder='templates')
@@ -14,8 +20,12 @@ def EmailToUsername(email_list):
         passwd=config.passwd,
         database=config.database)
     cursor = conn.cursor()
-    sql = f"SELECT username FROM notes WHERE email in {tuple(email_list)}"
-    cursor.execute(sql)
+
+    format_strings = ','.join(['%s'] * len(email_list))
+    cursor.execute("SELECT username FROM notes WHERE email IN (%s)" % format_strings,
+                tuple(email_list))
+
+
     results = cursor.fetchall()
     conn.close()
     users = []
@@ -32,49 +42,32 @@ def publish():
             if request.form.get("to_publish"):
                 to_publish = request.form.get("to_publish")
                 try:
-                    conn = sqlite.connect("notes_data.db")
-                    cur = conn.cursor()
-                    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-                    cur.execute("UPDATE editor SET published=:published WHERE email = :email AND filename=:filename", {
-                                "published": 'True', "email": session["email"], "filename": to_publish})
-                    conn.commit()
-                    conn.close()
-
+                    records.update_one({"email":session["email"],"filename":to_publish},{"$set":{"published":True}})
                     return jsonify({"success": True})
                 except Exception as E:
                     return jsonify({"success": False})
 
     # un_publish
             if request.form.get("un_publish"):
-                to_publish = request.form.get("un_publish")
+                un_publish = request.form.get("un_publish")
                 try:
-                    conn = sqlite.connect("notes_data.db")
-                    cur = conn.cursor()
-                    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-                    cur.execute("UPDATE editor SET published=:published WHERE email = :email AND filename=:filename", {
-                                "published": None, "email": session["email"], "filename": to_publish})
-                    conn.commit()
-                    conn.close()
+                    records.update_one({"email":session["email"],"filename":un_publish},{"$set":{"published":False}})
 
                     return jsonify({"success": True})
                 except Exception as E:
                     return jsonify({"success": False})
 
-        conn = sqlite.connect("notes_data.db")
-        cur = conn.cursor()
-        cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-        cur.execute("SELECT * FROM editor WHERE email=:email",
-                    {"email": session["email"]})
-
-        not_verified = []
+        
         verified = []
+        not_verified = []
 
-        result = cur.fetchall()
-        for i in result:
-            if not i[3]:
-                not_verified.append(i[2])
-            else:
-                verified.append(i[2])
+        for i in records.find({"email":session["email"],"published":True}):
+            verified.append(i["filename"])
+
+        for i in records.find({"email":session["email"],"published":False}):
+            not_verified.append(i["filename"])
+
+
 
         published = verified
         not_published = not_verified
@@ -86,9 +79,9 @@ def publish():
 
 @publish_page.route("/public", methods=["GET"])
 def public():
-    g = request.args.get("name")
+    file_name = request.args.get("name")
     u = request.args.get("username")
-    if g and u:
+    if file_name and u:
         conn = mysql.connector.connect(
             host=config.host,
             user=config.user,
@@ -103,20 +96,14 @@ def public():
 
         if email:
             email = email[0]
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("SELECT filename,editor_data FROM editor WHERE published='True' AND filename = :filename AND email = :email", {
-                        "filename": g, "email": email})
 
-            result = cur.fetchall()
-            conn.close()
+            result = records.find_one({"email":session["email"],"published":True,"filename":file_name})
+
+
             if result:
-                filename = result[0][0]
-                editor_data = result[0][1]
-                if editor_data == None:
-                    editor_data = ""
-                # print(filename,editor_data)
+                filename = result["filename"]
+                editor_data = result["editor_data"]
+
                 if session.get("username"):
                     return render_template("public.html", user=u, filename=filename, editor_data=editor_data, username=session["username"], email=session["email"], verified=session["verified"], pfp=session["pfp"], files=session["files"], show=True)
                 else:
@@ -127,23 +114,18 @@ def public():
         return redirect("/public")
 
     # normally return public.html
-    conn = sqlite.connect("notes_data.db")
-    cur = conn.cursor()
-    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-    cur.execute(
-        "SELECT email,filename,editor_data FROM editor WHERE published='True'")
+    result = records.find({"published":True})
 
-    result = cur.fetchall()
-    conn.close()
     emails = []
     filenames = []
     editor_data = []
 
     for i in result:
-        emails.append(i[0])
-        filenames.append(i[1])
-        editor_data.append(i[2])
+        emails.append(i["email"])
+        filenames.append(i["filename"])
+        editor_data.append(i["editor_data"])
 
+    
     users = EmailToUsername(emails)
 
     if session.get("username"):

@@ -15,3 +15,5 @@ drop_box_pwd = os.getenv("drop_box_pwd",default=None)
 
 
 drop_token = os.getenv("drop_token",default=None)
+
+mongo_str = os.getenv("mongo_str",default=None)

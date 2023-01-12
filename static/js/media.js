@@ -95,7 +95,7 @@ function UploadShow() {
 
 $('#sync').click(function () {
   this.innerHTML = "Syncing Plz Wait"
-
+  
   $.ajax({
     data: {
       sync: true,

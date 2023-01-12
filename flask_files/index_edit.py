@@ -1,9 +1,18 @@
 from flask import session, request, blueprints, jsonify, render_template, redirect
 import re
-from pysqlcipher3 import dbapi2 as sqlite
 import config
 import weasyprint
 import base64
+from pymongo import MongoClient
+
+
+
+client = MongoClient(config.mongo_str)
+db = client.get_database('notes')
+records = db.notes_data
+
+
+
 
 index_edit_page = blueprints.Blueprint(
     'index_edit_page', __name__, static_folder='static', template_folder='templates')
@@ -22,7 +31,7 @@ delete_name_page = blueprints.Blueprint(
 @index_edit_page.route("/edit_name", methods=["POST", "GET"])
 def edit_name():
     if request.method == "POST":
-
+        
         file_regex = "^[ a-zA-Z0-9_.-]+$"
         input1 = request.form["input1"]
         input2 = request.form["input2"]
@@ -43,14 +52,8 @@ def edit_name():
             session["files"][index] = new_input
             # add new input to database replacing it with original input
 
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("UPDATE editor SET filename = :new_input WHERE filename= :orignal_input AND email=:email", {
-                        "new_input": new_input, "orignal_input": original_input, "email": session["email"]})
 
-            conn.commit()
-            conn.close()
+            records.update_one({"email":session["email"],"filename":original_input},{"$set":{"filename":new_input}})
             return jsonify({"success": "renamed successfully"})
 
 
@@ -60,13 +63,8 @@ def delete_name():
         delete_input = request.form["delete_input"]
         try:
             session["files"].remove(delete_input)
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("DELETE FROM editor WHERE filename = :orignal_input AND email = :email", {
-                        "orignal_input": delete_input})
-            conn.commit()
-            conn.close()
+
+            records.delete_one({"email":session["email"],"filename":delete_input})
             return jsonify({"success": True})
         except:
             return jsonify({"success": False})
@@ -77,16 +75,10 @@ def download_name():
     if request.method == "POST":
         download_file = request.form["download_file"]
 
-        conn = sqlite.connect("notes_data.db")
-        cur = conn.cursor()
-        cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-        cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input AND email = :email", {
-                    "orignal_input": download_file, "email": session["email"]})
+        result = records.find_one({"email":session["email"],"filename":download_file})
 
-        results = cur.fetchall()
-        result = results[0][0]
-        if result == None:
-            result = ""
+        result = result["editor_data"]
+
         return jsonify({"success": True, "data": result})
 
 
@@ -94,17 +86,8 @@ def download_name():
 def view_name():
     name = request.args.get("name")
     if name:
-        conn = sqlite.connect("notes_data.db")
-        cur = conn.cursor()
-        cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-        cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input AND email = :email", {
-                    "orignal_input": name, "email": session["email"]})
-
-        results = cur.fetchall()
-        result = results[0][0]
-        if result == None:
-            result = ""
-
+        result = records.find_one({"email":session["email"],"filename":name})
+        result = result["editor_data"]
         return render_template("view.html", stuff=result, file_name=name)
     else:
         return redirect("/")

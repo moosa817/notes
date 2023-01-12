@@ -3,11 +3,17 @@ import requests
 import base64
 import dropbox
 import re
-from pysqlcipher3 import dbapi2 as sqlite
 import weasyprint
 import time
 from dropbox.files import WriteMode
+from pymongo import MongoClient
 
+
+
+client = MongoClient(config.mongo_str)
+db = client.get_database('notes')
+records = db.sync
+editor_record = db.notes_data
 
 def get_file_extension(filename):
     # Use a regular expression to search for the pattern of a file extension
@@ -104,24 +110,14 @@ def write_file_to_dropbox(token, path, file_contents):
 
 
 def SyncStuff(email):
-    conn = sqlite.connect("notes_data.db")
-    cur = conn.cursor()
-    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-    cur.execute("SELECT * FROM sync WHERE email= :email ", {"email": email})
 
-    result = cur.fetchall()
+    result = records.find_one({"email":email})
+
     if not result:
-        cur.execute("INSERT INTO sync ('email','sync_time') VALUES (:email , :time)", {
-                    "email": email, "time": '0'})
-        conn.commit()
+        records.insert_one({"email":email,"sync_time":time.ctime()})
         return '0'
     else:
-
-        for i in result:
-            sync_time = i[2]
-
-    conn.close()
-    return sync_time
+        return result["sync_time"]
 
 
 def SyncThings(token, email):
@@ -140,20 +136,13 @@ def SyncThings(token, email):
     if not file2_exist:
         dbx.files_create_folder('/Notes-pdf')
 
-    conn = sqlite.connect('notes_data.db')
-    cur = conn.cursor()
-
-    cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-
-    cur.execute("SELECT filename,editor_Data FROM editor WHERE email = :email", {
-                "email": email})
-
-    result = cur.fetchall()
+    result = editor_record.find({"email":email})
+    
     files = []
     editor_data = []
     for i in result:
-        files.append(i[0])
-        editor_data.append(i[1].encode('utf-8'))
+        files.append(i["filename"])
+        editor_data.append(i["editor_data"].encode('utf-8'))
 
     # html
     for g in range(len(files)):
@@ -165,11 +154,8 @@ def SyncThings(token, email):
         write_file_to_dropbox(token, pdf_path, pdf)
 
     mytime = time.ctime()
-    print(mytime)
-    cur.execute("UPDATE sync SET sync_time = :time", {"time": mytime})
-    conn.commit()
-    conn.close()
 
+    records.update_one({"email":email},{"$set":{"sync_time":mytime}})
     return mytime
 
 #using dropbox as service for uploading pfp using own token

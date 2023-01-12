@@ -1,10 +1,17 @@
 from flask import session, request, blueprints, redirect, render_template, jsonify
-from pysqlcipher3 import dbapi2 as sqlite
 import config
 import requests
 import base64
 from flask_files import dropbox_stuff as Db
 import re
+from pymongo import MongoClient
+
+
+
+client = MongoClient(config.mongo_str)
+db = client.get_database('notes')
+records = db.use_media
+
 
 media_page = blueprints.Blueprint(
     'media_page', __name__, static_folder='static', template_folder='templates')
@@ -31,12 +38,7 @@ def media():
                 if not re.match(emailRegex, email):
                     return render_template("mymedia.html", username=session["username"], email=session["email"], verified=session["verified"], pfp=session["pfp"], files=session["files"], use=False, error="Enter a Valid Email Address")
 
-                conn = sqlite.connect("notes_data.db")
-                cur = conn.cursor()
-                cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-                cur.execute("INSERT INTO use_media (email,email_to_use,status) VALUES (:1,:2,:3)", {
-                            '1': session["email"], '2': email, '3': "pending"})
-                conn.commit()
+                records.insert_one({"email":session["email"],"email_to_use":email,"status":"pending"})
 
                 headers = {
                     'Authorization': f'Bearer {config.courier_api}',
@@ -81,13 +83,8 @@ def media():
                     pass
 
         can_use = False
-        conn = sqlite.connect("notes_data.db")
-        cur = conn.cursor()
-        cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-        cur.execute("SELECT * FROM use_media WHERE email= :email",
-                    {"email": session["email"]})
+        result = records.find_one({"email":session["email"]})
 
-        result = cur.fetchall()
         try:
             result = result[0]
         except:
@@ -96,7 +93,7 @@ def media():
         if not result:
             can_use = False
         else:
-            status = result[3]
+            status = result["status"]
             if status == "pending":
                 return render_template("mymedia.html", username=session["username"], email=session["email"], verified=session["verified"], pfp=session["pfp"], files=session["files"], use="pending")
             elif status == "verified":

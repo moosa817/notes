@@ -1,15 +1,20 @@
 from flask import session, request, blueprints, jsonify, render_template, url_for, redirect, flash
-from flask import current_app
 import requests
-import os
 import mysql.connector
 import config
 from werkzeug.utils import secure_filename
 import re
 import bcrypt
-from pysqlcipher3 import dbapi2 as sqlite
 import random
 from flask_files import dropbox_stuff as Dp
+
+from pymongo import MongoClient
+
+
+
+client = MongoClient(config.mongo_str)
+db = client.get_database('notes')
+records = db.notes_data
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'tiff'])
 
@@ -219,14 +224,7 @@ def profile():
             conn.commit()
             conn.close()
 
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("DELETE FROM editor WHERE email = :email",
-                        {"email": session["email"]})
-            conn.commit()
-            conn.close()
-
+            records.delete_many({"email":session["email"]})
             return redirect('/logout')
 
         elif 'file' in request.files:
@@ -244,7 +242,6 @@ def profile():
 
                 filename = secure_filename(file.filename)
                 img_url = Dp.upload_pfp(config.drop_token,filename,file.read())
-                print(img_url)
                 conn = mysql.connector.connect(
                     host=config.host,
                     user=config.user,
