@@ -1,7 +1,7 @@
 from flask import session, request, blueprints, jsonify, render_template, redirect
 import re
 import config
-import weasyprint
+# import weasyprint
 import base64
 from pymongo import MongoClient
 
@@ -100,8 +100,8 @@ def dPDF():
         editor_data = request.form["editor_data"]
 
         # Create a PDF from the HTML text
-        pdf = weasyprint.HTML(string=editor_data).write_pdf()
-
+        # pdf = weasyprint.HTML(string=editor_data).write_pdf()
+        pdf = ""
         # Save the PDF to a file
 
         base64_data = base64.b64encode(pdf).decode('utf-8')

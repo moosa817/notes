@@ -3,7 +3,7 @@ import requests
 import base64
 import dropbox
 import re
-import weasyprint
+# import weasyprint
 import time
 from dropbox.files import WriteMode
 from pymongo import MongoClient
@@ -149,7 +149,8 @@ def SyncThings(token, email):
         path = '/Notes-html/'+files[g]+".html"
         write_file_to_dropbox(token, path, editor_data[g])
 
-        pdf = weasyprint.HTML(string=editor_data[g]).write_pdf()
+        # pdf = weasyprint.HTML(string=editor_data[g]).write_pdf()
+        pdf = ""
         pdf_path = '/Notes-pdf/'+files[g]+".pdf"
         write_file_to_dropbox(token, pdf_path, pdf)
 
