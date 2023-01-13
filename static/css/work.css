@@ -184,7 +184,9 @@
 .files-icons{
   float:right;
 }
-
+.edits:hover{
+  cursor: pointer;
+}
 
 .files a{
   border: 1px solid black;
@@ -281,4 +283,28 @@
   margin-left:2%;
   background:transparent;
   border:none;}
+
+
+  .verify-plz::before{
+    position:absolute;
+    float:right;
+    content: '';
+    background-color:red;
+    border-radius:50%;
+    opacity:0.9;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+  }
+
+.small-info{
+  margin-top: 4%;
+  margin-bottom: 3%;
+  text-align: center;
+}
+.s-link{
+  margin-left:10px;
+  font-size:smaller;
+
+}
 /*# sourceMappingURL=work.css.map */

@@ -52,16 +52,16 @@ function StopEditable(id) {
   input1 = input1.replace(/&nbsp;/g,'');
   input2 = input2.replace(/&nbsp;/g,'');
 
-  // console.log(input1)
-  // console.log(input2)
+    email = document.getElementById('email-'+id_no)
 
   $.ajax({
     data: {
       input1: input1,
-      input2: input2
+      input2: input2,
+      email:email.innerHTML
     },
     type: 'POST',
-    url: '/edit_name'
+    url: '/admin'
   })
 .done(function (data) {
   if (data.error){
@@ -88,108 +88,45 @@ for (var i = 0; i < elements.length; i++) {
     }
   })
 };
-var f 
-var id_no
-function open_delete(id){
-  myArray = id.split("-");
-  id_no = myArray[1]
-  f = document.getElementById(id).innerHTML
-  document.getElementById("modal-body").innerHTML  = "You Sure you want to delete " + f
+
+function SwitchView(id) {
+  elem = document.getElementById(id)
+  elem.innerHTML = elem.getAttribute('data')
 
 }
-// file delete
-function delete_name(){
+function showInfo(ip){
+  body = document.getElementById('modal-body2')
+
+
   $.ajax({
     data: {
-      delete_input: f
+      "get": 'a',
     },
     type: 'POST',
-    url: '/delete_name'
+    url: '/get_info'
   })
 .done(function (data) {
- if (data.success === true){
-  e_id = "f-"+id_no
-  // console.log(e_id)
-  document.getElementById(e_id).remove()
-}
-})};
+ 
+      country = data["country"]
 
+      regionname = data["region"]
+      city = data["city"]
+      zip = data["postal"]
+      loc= data["loc"]
+      timezone = data["timezone"]
+      isp = data["org"]
 
+      html = `<b>Country</b>: ${country}<br>
+              <b>Region Name</b>: ${regionname}<br>
+              <b>City</b>: ${city}<br>
+              <b>Zip Code</b>: ${zip}<br>
+              <b>Location</b> : ${loc}<br>
+              <b>Timezone</b>: ${timezone}<br>
+              <b>ISP</b> : ${isp}<br>
+      `
 
-function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  element.remove()
-}
-
-
-
-
-
-
-// file download 
-var file_name
-var filename,editor_data
-function download_name(id){
-
-  file_name = document.getElementById(id).innerHTML
-  $.ajax({
-    data: {
-      download_file: file_name
-    },
-    type: 'POST',
-    url: '/download_name'
+      body.innerHTML= html
+      // console.log(body)
   })
-.done(function (data) {
- if(data.success === true){
-
-  filename = file_name
-  editor_data = data.data
- }
-})
-
-}
-function DownloadHtml(){
-  download(filename+'.html',editor_data)
-}
-
-function downloadFile(filename, base64Url) {
-  var a = document.createElement("a"); //Create <a>
-    a.href = base64Url //Image Base64 Goes here
-    a.download = filename; //File name Here
-    a.click(); //Downloaded file
-    a.remove();
-
-}
-
-
-
-
-
-
-
-
-
-function DownloadPdf(){
-  $.ajax({
-    data: {
-      filename: filename,
-      editor_data:editor_data
-    },
-    type: 'POST',
-    url: '/download_pdf'
-  })
-.done(function (data) {
- if(data.success === true){
-  downloadFile(filename+'.pdf',data.pdf_download)
- }
-})
-
+ 
 }

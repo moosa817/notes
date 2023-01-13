@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{%block title%} Admin{%endblock%}
+
+{%block content%}
+<style>
+    .s{
+        color:blue;
+
+    }
+    .s:hover{
+        cursor: pointer;
+    }
+</style>
+
+
+
+
+
+
+<h1 class="heading1">Admin-Login-Page</h1>
+<center>
+    <a href="/admin?page=editor" style="margin-right:5%">Editor</a>
+    <a href="/admin?page=verify" style="margin-right:5%">Verify</a>
+    <a href="/admin?page=logs" style="margin-right:5%">Logs</a>
+
+
+</center>
+
+{%if error%}
+<div class="error-box" name="fadeOut">
+    {{error}}
+</div>
+
+{%endif%}
+
+
+{%if not login%}
+<form method="POST">
+    <div class="mb-2">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword1" name="pwd" value="{{pwd}}">
+    </div>
+ 
+      
+  
+    <button type="submit" class="btn btn-primary mb-3 register" id="login">Login</button>
+    
+  </form>
+{%endif%}
+{%if login%}
+
+{%if page1%}
+<h2 class="heading-modal">Editor Data DB</h2>
+
+<table class="table table-dark">
+<thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Email</th>
+      <th scope="col">Filename</th>
+      <th scope="col">Is Public</th>
+      <th scope="col">Editor Data</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for i in filename %}
+
+
+    
+      <tr>
+        <th scope="row">{{ids[loop.index-1]}}</th>
+        <td>{{email[loop.index-1]}}</td>
+        <td>{{i}}</td>
+        <td>{{is_public[loop.index-1]}}</td>
+        <td id="{{loop.index}}" data="{{editor_data[loop.index-1]}}"><a class="s" onclick="SwitchView('{{loop.index}}')">Show</a></td>
+
+      </tr>
+  
+{% endfor %}
+</tbody>
+
+</table>
+{%endif%}
+
+
+{%if page2%}
+<h2 class="heading-modal">Verify For Dropbox DB</h2>
+
+<table class="table table-dark">
+<thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Email</th>
+      <th scope="col">Use Email</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for i in email %}
+
+
+    
+      <tr>
+        <th scope="row">{{ids[loop.index-1]}}</th>
+        <td id="email-{{loop.index}}">{{i}}</td>
+        <td>{{use_email[loop.index-1]}}</td>
+        <td>
+            <p class="edits" style="display:inline" id="edit-{{loop.index}}">{{status[loop.index-1]}}</p>
+            <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
+            <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')"><i class="fa-solid fa-check"></i></button></td>
+
+            <td>
+              <form method="post">
+                <input type="hidden" name="delete_email" value="{{i}}">
+                <button type="submit">
+                  <i class='fa fa-solid fa-trash'></i>
+                </button>
+
+              </form>
+            
+            </td>
+            
+
+      </tr>
+
+
+  
+{% endfor %}
+<tr>
+  <form method="post">
+    <td></td>
+    <td><input type="email" placeholder="Email" name="email1" required></td>
+    <td><input type="email" placeholder="Email To use" name="email_to_use1" required></td>
+    <td><input type="text" placeholder="Status" name="status1" required></td>
+    <td><input type="submit"></td>
+
+
+  </form>
+
+</tr>
+</tbody>
+
+</table>
+{%endif%}
+
+
+
+
+
+{%if page3 %} 
+<table class="table table-dark mt-3">
+  <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Email</th>
+        <th scope="col">Time</th>
+        <th scope="col">Ip Address</th>
+      </tr>
+    </thead>
+    <tbody>
+  
+  
+  
+    
+    {%for i in email %}
+  <tr>
+
+ <td>{{ids[loop.index-1]}}</td>
+ <td>{{i}}</td>  
+ <td>{{time[loop.index-1]}}</td>  
+ <td>{{ip[loop.index-1]}} 
+
+
+  <a onclick="showInfo('{{ip[loop.index-1]}}')" data-bs-toggle="modal" data-bs-target="#exampleModal1"><i class="fa-solid fa-search ml-3"></i></a>
+
+ </td>  
+</tr>
+
+ {%endfor%}
+
+  </tbody>
+  
+  </table>
+  
+
+
+{%endif%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{%endif%}
+
+
+
+
+
+<!-- Modal for download name -->
+<div class="modal fade" id="exampleModal1" tabindex="-2" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel1">Get ip info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body2">
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script src="/static/js/admin.js"></script>
+
+
+
+{%endblock%}

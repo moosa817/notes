@@ -1,0 +1,110 @@
+{% extends 'base.html'%}
+
+{%block title%} Public Notes {%endblock%}
+
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/publish.css">
+
+
+{% if not show %}
+<h1 class="text-center">Public Notes</h1>
+
+{%for i in files%} 
+
+
+
+
+<div class="public-box" id="{{i}}">
+
+    <div>
+  <a style="text-decoration: none;" href="/public?name={{i.replace(' ','%20')}}&username={{user[loop.index-1]}}">  {{i}}</a>
+<br>
+  From user: {{user[loop.index-1]}}
+</div>
+
+<div>
+
+
+    <a style="text-decoration: none;" href="/public?name={{i.replace(' ','%20')}}&username={{user[loop.index-1]}}"> 
+<button class="btn btn-primary">View</button>
+    
+    </a>
+
+<button class="btn btn-success" id="b-{{loop.index}}"
+            onclick="copy(`/public?name={{i.replace(' ','%20')}}&username={{user[loop.index-1]}}`,'b-{{loop.index}}')">Copy Url</button>
+
+</div>
+
+
+</div>
+
+
+{%endfor%}
+
+
+
+
+{%endif%}
+{% if show %}
+
+
+
+
+<a href="/public" class="go-back"> <i class="fa fa-solid fa-arrow-left"></i>Go Back</a>
+<div class="file_heading">View {{filename}} </div>
+<div class="text-center">by {{username}}</div>
+
+<a data-bs-toggle="modal" data-bs-target="#exampleModal1"><button class="btn btn-primary">
+
+        <i class="fa-solid fa-download"></i> Download
+
+    </button></a>
+
+<hr>
+
+<div style="width:100%;border:1px solid black; padding:10px;" id="editorData">
+
+    {{editor_data | safe}}
+
+</div>
+
+
+<!-- Modal for download name -->
+<div class="modal fade" id="exampleModal1" tabindex="-2" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1">Download</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body1">
+                <button class="btn btn-lg btn-primary" onclick="DownloadHtml('{{filename}}')">Download As HTML</button>
+                <button class="btn btn-lg btn-primary"
+                    onclick="DownloadPdf('{{filename}}')">Download As PDF</button>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{%endif%}
+<script src="/static/js/publish.js"></script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Notes- Verify Email{% endblock %}
+
+{% block content %}
+<center><h1 id="heading-verify">Verify Email</h1></center>
+<div class="error" id="edit-error"></div>
+<div class="success-box" style="display:none;" id="edit-success"></div>
+<div class="pf-form">
+    <div class="mb-2">
+      <label for="exampleInputEmail1" class="form-label" id="e">Email address</label>
+      <input disabled type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email" value='{{email}}'>
+    </div>
+
+      </div>
+      
+    
+    <button id="verify-btn" class="btn btn-primary mb-3 verify" onclick="verify()">Verify Email</button>
+    
+
+      <div id="code-form" style="display:none;">
+    <div class="pf-form">
+        <div class="mb-2">
+          <label for="exampleInputEmail1" class="form-label" id="e">Enter the code we sent to {{email}}}</label>
+          <input type="text" class="form-control" id="code" aria-describedby="emailHelp" name="code" placeholder="Enter Code">
+        </div>
+    
+          </div>
+          
+        <button id="code-btn" class="btn btn-success mb-3 verify" onclick="checkCode()">Submit Code</button>
+        
+
+
+</div>
+
+
+  <script src="/static/js/profile.js"></script>
+
+{% endblock %}

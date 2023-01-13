@@ -1,0 +1,27 @@
+@media screen and (min-width:800px)  {
+    
+.vertical-line {
+    border-left: 2px solid black; /* Adds a 2 pixel wide, solid black border to the left side of the div */
+    height: 100%; /* Makes the div the same height as its parent container */
+  }
+}
+
+.e-box{
+    border: 1px solid black;
+    padding:10px;
+    margin:10px;
+}
+.btn-1{
+    border:0; padding:2px;margin-left:5%;
+}
+.p-link{
+    text-decoration: none;
+    color:white;
+}
+.public-box{
+    border: 1px solid black;
+    padding: 12px;
+    margin: 14px;
+    display: flex;
+    justify-content: space-between;
+}

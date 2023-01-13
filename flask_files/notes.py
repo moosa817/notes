@@ -1,55 +1,50 @@
-from flask import session,request,blueprints,jsonify,render_template
-from pysqlcipher3 import dbapi2 as sqlite
+from flask import session, request, blueprints, jsonify, render_template, redirect
 import config
+from pymongo import MongoClient
 
 
 
-notes_page = blueprints.Blueprint('notes', __name__,static_folder='static',template_folder='templates')
+client = MongoClient(config.mongo_str)
+db = client.get_database('notes')
+records = db.notes_data
 
-@notes_page.route("/notes/<n>", methods=["GET", "POST"])
-def notes(n):
+
+notes_page = blueprints.Blueprint(
+    'notes', __name__, static_folder='static', template_folder='templates')
+
+
+@notes_page.route("/notes", methods=["GET", "POST"])
+def notes():
     if session.get("username"):
         if request.method == "POST":
+
             editor_data = request.form["editor_data"]
 
-            n = int(n)
-            n = n-1
-            name = session["files"][n]
+            name = request.form["name"]
 
+            records.update_one({"email":session["email"],"filename":name},{"$set":{"editor_data":editor_data}})
+            
+            def utf8len(s):return ((len(s.encode('utf-8')))/1024)/1024
 
+            size = utf8len(editor_data)
+            size = round(size,4)
+            
+            return jsonify({"success": True,"size":size})
 
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
+        if request.args.get("name"):
+            if session.get("username"):
+                name = request.args.get("name")
 
-            cur.execute("UPDATE editor SET editor_data=:editor_data WHERE filename = :name", {"editor_data":editor_data,"name":name})
+                result = records.find_one({"email":session["email"],"filename":name})
+                result = result["editor_data"]
 
-            conn.commit()
-            conn.close()
-            return jsonify({"success":True})
+                def utf8len(s):return ((len(s.encode('utf-8')))/1024)/1024
+
+                size = utf8len(result)
+                size = round(size,4)
+                return render_template("notes.html", username=session["username"], email=session["email"], verified=session["verified"], pfp=session["pfp"], files=session["files"], stuff=result, file_name=name,size=size)
+
         else:
-            n = int(n)
-            n = n-1
-            name = session["files"][n]
-            conn = sqlite.connect("notes_data.db")
-            cur  = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-
-            cur.execute("SELECT editor_data FROM editor WHERE filename = :orignal_input", {"orignal_input":name})
-
-            results = cur.fetchall()
-            result = results[0][0]
-            if result == None:
-                result = ""
-
-            return render_template("notes.html",username = session["username"],email = session["email"],verified=session["verified"],pfp=session["pfp"],files=session["files"],stuff=result,file_name=name)
-
-       
-
-
-
-
-
-
-
-
+            return redirect("/")
+    else:
+        return render_template("index.html")

@@ -10,7 +10,6 @@
 <a href="/signup" class="first">Signup/Login to open your notes </a>
 {% endif %}
 
-
 {% if username %}
 
 {% if error %}
@@ -38,12 +37,13 @@
 {% set a = 0 %}
 {% for i in files %}
 
+
+
 <div class="files" id="f-{{loop.index}}">
   
 
   
-
-  <p class="edits" style="display:inline" id="edit-{{loop.index}}">{{i}}</p>
+  <p class="edits" style="display:inline;cursor:text;" id="edit-{{loop.index}}">{{i}}</p>
   <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
   <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')"><i class="fa-solid fa-check"></i></button>
 
@@ -51,7 +51,7 @@
 
 
 
-<a href="/view/{{loop.index}}"><i class="fa-sharp fa-solid fa-eye"></i></a>
+<a href="/view?name={{i.replace(' ','%20')}}"><i class="fa-sharp fa-solid fa-eye"></i></a>
 
 
 
@@ -60,16 +60,16 @@
 
 
 
-<a onclick="download_name('edit-{{loop.index}}')"><i class="fa-solid fa-download"></i></a>
+<a onclick="download_name('edit-{{loop.index}}')" data-bs-toggle="modal" data-bs-target="#exampleModal1"><i class="fa-solid fa-download"></i></a>
 <!-- Button trigger modal -->
-<a onclick="open_delete('edit-{{loop.index}}')" cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<a onclick="open_delete('edit-{{loop.index}}')" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal">
   <i class="fa fa-solid fa-trash"></i>
 </a>
 
 
 
 
-<a href="/notes/{{loop.index}}"><i class="fa-sharp fa-solid fa-file-pen"></i></a>
+<a href="/notes?name={{i.replace(' ','%20')}}"><i class="fa-sharp fa-solid fa-file-pen"></i></a>
 
 </div>
 
@@ -109,7 +109,29 @@
 
 
 
+<!-- Modal for download name -->
+<div class="modal fade" id="exampleModal1" tabindex="-2" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel1">Download</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body1">
+      <button class="btn btn-lg btn-primary" onclick="DownloadHtml()">Download As HTML</button>
+      <button class="btn btn-lg btn-primary" onclick="DownloadPdf()">Download As PDF</button>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 <script src="/static/js/stuff.js"></script>
+
 {% endblock %}
