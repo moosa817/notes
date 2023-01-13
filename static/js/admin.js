@@ -94,3 +94,39 @@ function SwitchView(id) {
   elem.innerHTML = elem.getAttribute('data')
 
 }
+function showInfo(ip){
+  body = document.getElementById('modal-body2')
+
+
+  $.ajax({
+    data: {
+      "get": 'a',
+    },
+    type: 'POST',
+    url: '/get_info'
+  })
+.done(function (data) {
+ 
+      country = data["country"]
+
+      regionname = data["region"]
+      city = data["city"]
+      zip = data["postal"]
+      loc= data["loc"]
+      timezone = data["timezone"]
+      isp = data["org"]
+
+      html = `<b>Country</b>: ${country}<br>
+              <b>Region Name</b>: ${regionname}<br>
+              <b>City</b>: ${city}<br>
+              <b>Zip Code</b>: ${zip}<br>
+              <b>Location</b> : ${loc}<br>
+              <b>Timezone</b>: ${timezone}<br>
+              <b>ISP</b> : ${isp}<br>
+      `
+
+      body.innerHTML= html
+      // console.log(body)
+  })
+ 
+}

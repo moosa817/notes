@@ -1,13 +1,16 @@
-from flask import session, request, blueprints, redirect, url_for, render_template
+from flask import session, request, blueprints, redirect, url_for, render_template,jsonify
 import re
 import config
 from pymongo import MongoClient
+import requests
+import datetime
 
 
 
 client = MongoClient(config.mongo_str)
 db = client.get_database('notes')
 records = db.notes_data
+records_logs = db.logs
 
 
 index_page = blueprints.Blueprint(
@@ -62,6 +65,43 @@ def logout():
     return redirect(url_for("index.index"))
 
 
-@index_page.route("/test", methods=["GET", "POST"])
+@index_page.route("/log", methods=["GET", "POST"])
 def test():
-    return 'sent'
+    if request.method == "POST":
+        r = 'https://api.ipify.org?format=json'
+        r = requests.get(r)
+
+        ip = r.json()
+        ip = ip["ip"]
+        if session.get("email"):
+            email = session["email"]
+        else:
+            email = "Guest"
+
+        now = datetime.datetime.now()
+        utcnow = datetime.datetime.utcnow()
+        diff = utcnow-now
+
+        diff_hr = diff.total_seconds()/60/60
+        diff_hr = "{:.1f}".format(diff_hr)
+
+        diff_hr = float(diff_hr)
+        diff_hr = int(diff_hr)
+   
+        def convert(seconds):
+            min, sec = divmod(seconds, 60)
+            hour, min = divmod(min, 60)
+            return '%d:%02d:%02d' % (hour, min, sec)
+
+        time_diff = convert(diff.total_seconds())
+
+        if diff.total_seconds() < 0:
+            final_time = now.strftime(f"%a %d %b %H:%M:%S{time_diff}")
+        else:
+            final_time = now.strftime(f"%a %d %b %H:%M:%S+{time_diff}")
+
+            
+        records_logs.insert_one({"email":email,"time":final_time,"ip":ip})
+        
+
+        return jsonify({"ok":"sure"})

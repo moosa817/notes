@@ -122,6 +122,8 @@
             
 
       </tr>
+
+
   
 {% endfor %}
 <tr>
@@ -145,6 +147,45 @@
 
 
 
+{%if page3 %} 
+<table class="table table-dark mt-3">
+  <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Email</th>
+        <th scope="col">Time</th>
+        <th scope="col">Ip Address</th>
+      </tr>
+    </thead>
+    <tbody>
+  
+  
+  
+    
+    {%for i in email %}
+  <tr>
+
+ <td>{{ids[loop.index-1]}}</td>
+ <td>{{i}}</td>  
+ <td>{{time[loop.index-1]}}</td>  
+ <td>{{ip[loop.index-1]}} 
+
+
+  <a onclick="showInfo('{{ip[loop.index-1]}}')" data-bs-toggle="modal" data-bs-target="#exampleModal1"><i class="fa-solid fa-search ml-3"></i></a>
+
+ </td>  
+</tr>
+
+ {%endfor%}
+
+  </tbody>
+  
+  </table>
+  
+
+
+{%endif%}
+
 
 
 
@@ -165,7 +206,40 @@
 
 
 {%endif%}
+
+
+
+
+
+<!-- Modal for download name -->
+<div class="modal fade" id="exampleModal1" tabindex="-2" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel1">Get ip info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body2">
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
 <script src="/static/js/admin.js"></script>
+
 
 
 {%endblock%}

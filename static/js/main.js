@@ -1,3 +1,27 @@
+//log stuff
+
+if(sessionStorage.getItem('session')){}
+
+else{
+  sessionStorage.setItem('session',true)
+  $.ajax({
+    data: {
+      'ok':'sure'
+    },
+    type: 'POST',
+    url: '/log'
+  })
+  .done(function (data) {});
+
+};
+//
+
+
+
+
+
+
+
 $(document).ready(function() {
     $("nav ul li [href]").each(function() {
         if (this.href == window.location.href) {

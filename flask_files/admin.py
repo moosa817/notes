@@ -1,8 +1,15 @@
-from flask import session, request, blueprints, redirect, render_template
+from flask import session, request, blueprints, redirect, render_template,jsonify
 import re
-from pysqlcipher3 import dbapi2 as sqlite
 import config
+from pymongo import MongoClient
+import requests
 
+
+client = MongoClient(config.mongo_str)
+db = client.get_database('notes')
+records_media = db.use_media
+records = db.notes_data
+records_admin = db.logs
 
 admin_page = blueprints.Blueprint(
     'admin_page', __name__, static_folder='static', template_folder='templates')
@@ -21,25 +28,13 @@ def admin():
 
         if request.form.get("delete_email"):
             to_delete = request.form.get("delete_email")
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("DELETE FROM use_media WHERE email = :email", {
-                        "email": to_delete})
-            conn.commit()
-            conn.close()
+            records_media.delete_one({"email":to_delete})
 
         if request.form.get("input1"):
             input1 = request.form["input1"]
             email = request.form["email"]
 
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("UPDATE use_media SET status = :status WHERE email = :email", {
-                        "status": input1, "email": email})
-            conn.commit()
-            conn.close()
+            records_media.update_one({"email":email},{"$set":{"status":input1}})
 
     if session.get("admin"):
         if request.form.get("email1") and request.form.get("email_to_use1") and request.form.get("status1"):
@@ -52,22 +47,11 @@ def admin():
             if not re.match(emailRegex, email) or not re.match(emailRegex, email_to_use):
                 pass
             else:
-                conn = sqlite.connect("notes_data.db")
-                cur = conn.cursor()
-                cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-                cur.execute("INSERT INTO use_media (email,email_to_use,status) VALUES (:1,:2,:3)", {
-                            '1': email, '2': email_to_use, '3': status})
-                conn.commit()
+                records_media.insert_one({"email":email,"email_to_use":email_to_use,"status":status})
 
         page = request.args.get("page")
         if page == "editor":
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("SELECT * FROM editor")
-            result = cur.fetchall()
-            conn.commit()
-            conn.close()
+            result = records.find({})
 
             email = []
             filename = []
@@ -78,21 +62,15 @@ def admin():
             for i in result:
                 id = id+1
                 ids.append(id)
-                email.append(i[1])
-                filename.append(i[2])
-                is_public.append(i[3])
-                editor_data.append(i[4])
+                email.append(i["email"])
+                filename.append(i["filename"])
+                is_public.append(i["published"])
+                editor_data.append(i["editor_data"])
 
             return render_template("admin.html", login=True, ids=ids, email=email, filename=filename, editor_data=editor_data, page1=True, is_public=is_public)
 
         elif page == "verify":
-            conn = sqlite.connect("notes_data.db")
-            cur = conn.cursor()
-            cur.execute("PRAGMA key='{}'".format(config.db_pwd))
-            cur.execute("SELECT * FROM use_media")
-            result = cur.fetchall()
-            conn.commit()
-            conn.close()
+            result = records_media.find({})
 
             email = []
             use_email = []
@@ -102,15 +80,30 @@ def admin():
             for i in result:
                 id = id+1
                 ids.append(id)
-                email.append(i[1])
-                use_email.append(i[2])
-                status.append(i[3])
+                email.append(i["email"])
+                use_email.append(i["email_to_use"])
+                status.append(i["status"])
 
             return render_template("admin.html", login=True, ids=ids, email=email, use_email=use_email, status=status, page2=True)
 
         elif page == "logs":
-            return render_template("admin.html", login=True)
+            email = []
+            ip = []
+            time = []
+            for i in records_admin.find({}):
+                email.append(i["email"])
+                ip.append(i["ip"])
+                time.append(i["time"])
+            ids = list(range(1,len(email)))
+
+            return render_template("admin.html", login=True,page3=True,email=email,ip=ip,ids=ids,time=time)
         else:
             return render_template("admin.html", login=True)
 
     return render_template("admin.html", login=False)
+
+@admin_page.route("/get_info",methods=["POST","GET"])
+def get():
+    r = requests.get("https://ipinfo.io/json")
+
+    return r.json()
