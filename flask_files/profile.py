@@ -241,7 +241,17 @@ def profile():
             if file and allowed_file(file.filename):
 
                 filename = secure_filename(file.filename)
+                if Dp.validate_token(config.drop_token):
+                    token = config.drop_token
+                else:
+                    config.drop_token = Dp.RefreshToken(config.drop_refresh)
+
+
                 img_url = Dp.upload_pfp(config.drop_token,filename,file.read())
+                
+                
+                
+                
                 conn = mysql.connector.connect(
                     host=config.host,
                     user=config.user,
