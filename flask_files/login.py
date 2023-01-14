@@ -4,7 +4,7 @@ import config
 import bcrypt
 import random
 import requests
-
+import re
 
 def Email_To(email):
     random_no = random.randrange(1, 10**6)
@@ -137,8 +137,17 @@ def reset():
                 email = emails[index]
                 session["code"] = Email_To(email)
                 session["email"] = email
-
-                return render_template("reset.html", code=session["code"], email=session["email"])
+                def mask_email(text):
+                    email = re.search(r'\S+@\S+', text)
+                    if email:
+                        email = email.group()
+                        email_parts = email.split("@")
+                        email_parts[0] = email_parts[0][0] + "*"*(len(email_parts[0])-3) + email_parts[0][-2:]
+                        masked_email = "@".join(email_parts)
+                        text = text.replace(email, masked_email)
+                    return text
+                e = mask_email(session["email"])
+                return render_template("reset.html", code=session["code"], email=e)
 
             if request.form.get('code'):
                 code = request.form["code"]
