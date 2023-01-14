@@ -113,7 +113,7 @@ def media():
                 data = {
                     "code": code,
                     "grant_type": "authorization_code",
-                    "redirect_uri": "http://localhost:5000/media"
+                    "redirect_uri": "https://notes817.vercel.app/media"
                 }
 
                 r = requests.post(
