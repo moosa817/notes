@@ -4,7 +4,7 @@ import config
 # import weasyprint
 import base64
 from pymongo import MongoClient
-
+import requests
 
 
 client = MongoClient(config.mongo_str)
@@ -98,12 +98,27 @@ def dPDF():
     if request.method == "POST":
         filename = request.form["filename"]
         editor_data = request.form["editor_data"]
+        # Create a PDF from the HTML text using api :)
 
-        # Create a PDF from the HTML text
-        # pdf = weasyprint.HTML(string=editor_data).write_pdf()
-        pdf = ""
-        # Save the PDF to a file
+        headers = {
+            'Content-Type': 'application/json',
+        }
 
-        base64_data = base64.b64encode(pdf).decode('utf-8')
-        data_url = 'data:application/pdf;base64,' + base64_data
+        params = {
+            'pwd': 'sk96Jaffasaladflask',
+        }
+
+        json_data = {
+            'editor_data': '<h1>heyyy<h1>',
+        }
+
+        response = requests.post(
+            'https://myapiservices.moosa817.repl.co/convert_html_to_pdf',
+            params=params,
+            headers=headers,
+            json=json_data,
+        )
+
+        pdf = response.json()
+        data_url = pdf["url"]
         return jsonify({"success": True, 'pdf_download': data_url})
