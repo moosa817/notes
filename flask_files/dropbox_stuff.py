@@ -97,9 +97,13 @@ def RefreshToken(refresh_token):
 
 
 def DeleteFile(token, path):
-    dbx = dropbox.Dropbox(token)
-    dbx.files_delete(path)
-    return True
+    try:
+        dbx = dropbox.Dropbox(token)
+        dbx.files_delete(path)
+        return True
+    except Exception as E:
+        print(E)
+        return False
 
 
 def write_file_to_dropbox(token, path, file_contents):

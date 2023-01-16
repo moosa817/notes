@@ -66,7 +66,7 @@ def logout():
 
 
 @index_page.route("/log", methods=["GET", "POST"])
-def test():
+def log():
     if request.method == "POST":
         r = 'https://api.ipify.org?format=json'
         r = requests.get(r)
@@ -105,3 +105,5 @@ def test():
         
 
         return jsonify({"ok":"sure"})
+
+    return 'A'
