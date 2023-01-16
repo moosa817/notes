@@ -30,6 +30,7 @@ def media():
                         session["access_token"], session["email"])
                     return jsonify({"success": True, "time": mytime})
                 except Exception as e:
+                    print(e)
                     return jsonify({"success": False})
             if request.form.get("email"):
                 email = request.form["email"]

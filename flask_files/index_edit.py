@@ -105,11 +105,11 @@ def dPDF():
         }
 
         params = {
-            'pwd': 'sk96Jaffasaladflask',
+            'pwd': config.db_pwd,
         }
 
         json_data = {
-            'editor_data': '<h1>heyyy<h1>',
+            'editor_data': editor_data,
         }
 
         response = requests.post(

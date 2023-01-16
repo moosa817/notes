@@ -95,7 +95,7 @@ function UploadShow() {
 
 $('#sync').click(function () {
   this.innerHTML = "Syncing Plz Wait"
-  
+  console.log("syncing")
   $.ajax({
     data: {
       sync: true,
@@ -106,8 +106,11 @@ $('#sync').click(function () {
     .done(function (data) {
       if(data.success){
         console.log("here iam")
-        this.innerHTML = "Synced"
+        document.getElementById('sync').innerHTML = "Synced"
         document.getElementById('synctime').innerHTML = data.time
+      }
+      else{
+        document.getElementById('sync').innerHTML = "Sync Failed"
       }
      })
 

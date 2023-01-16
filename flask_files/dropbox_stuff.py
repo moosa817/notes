@@ -153,10 +153,34 @@ def SyncThings(token, email):
         path = '/Notes-html/'+files[g]+".html"
         write_file_to_dropbox(token, path, editor_data[g])
 
-        # pdf = weasyprint.HTML(string=editor_data[g]).write_pdf()
-        pdf = ""
+        
+        headers = {
+            'Content-Type': 'application/json',
+        }
+
+        params = {
+            'pwd': config.db_pwd,
+        }
+
+        json_data = {
+            'editor_data': editor_data[g].decode('utf-8'),
+        }
+
+        response = requests.post(
+            'https://myapiservices.moosa817.repl.co/convert_html_to_pdf',
+            params=params,
+            headers=headers,
+            json=json_data,
+        )
+
+        pdf = response.json()
+        b_pdf = pdf["url"].split(",")[1]
+        pdf_data = b_pdf.encode()
+        
+        pdf_bytes = base64.b64decode(pdf_data)
+
         pdf_path = '/Notes-pdf/'+files[g]+".pdf"
-        write_file_to_dropbox(token, pdf_path, pdf)
+        write_file_to_dropbox(token, pdf_path, pdf_bytes)
 
     mytime = time.ctime()
 
