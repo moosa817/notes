@@ -1,17 +1,27 @@
+$(document).ready(function () {
+  if (window.location.pathname === '/notes') {
+    console.log("from noteshere")
+    $('#footer').css('bottom', '-150%')
+  }
+});
+
+
+
+
 //log stuff
 
-if(sessionStorage.getItem('session')){}
+if (sessionStorage.getItem('session')) { }
 
-else{
-  sessionStorage.setItem('session',true)
+else {
+  sessionStorage.setItem('session', true)
   $.ajax({
     data: {
-      'ok':'sure'
+      'ok': 'sure'
     },
     type: 'POST',
     url: '/log'
   })
-  .done(function (data) {});
+    .done(function (data) { });
 
 };
 //
@@ -22,12 +32,12 @@ else{
 
 
 
-$(document).ready(function() {
-    $("nav ul li [href]").each(function() {
-        if (this.href == window.location.href) {
-            $(this).addClass("active-link");
-        }
-    });
+$(document).ready(function () {
+  $("nav ul li [href]").each(function () {
+    if (this.href == window.location.href) {
+      $(this).addClass("active-link");
+    }
+  });
 
 });
 
@@ -38,65 +48,65 @@ $(document).ready(function() {
 
 
 
-$(document).ready(function() {
-n = localStorage.getItem('theme');
-// console.log(n)
+$(document).ready(function () {
+  n = localStorage.getItem('theme');
+  // console.log(n)
 
-if (n== null){
-  n = 0;
-  localStorage.setItem('theme', n);
-}
-
-
-if (n == 1){
-  var element = document.body;
-
-  element.classList.toggle("light-mode");
-  document.getElementById('footer').classList.toggle('light-footer');
-  document.getElementById('nav').classList.toggle('light-nav');
-  document.getElementById('signup').classList.toggle('signup-light');
-
-
-
-}
-});
-
-
-$(document).ready(function(){
-const checkbox = document.getElementById('checkbox');
-
-checkbox.addEventListener('change', ()=>{
-
-
-
-
-
-  document.body.classList.toggle('light-mode');
-  document.getElementById('footer').classList.toggle('light-footer');
-  document.getElementById('nav').classList.toggle('light-nav');
-
-
-  // document.reload();
-  if (document.getElementById('signup') != null){
-  classList.toggle('signup-light');
-  }
-
-  if (n == 0) {
-    n = 1;
-    localStorage.setItem('theme', n);
-  }
-  else{
+  if (n == null) {
     n = 0;
     localStorage.setItem('theme', n);
   }
-  // console.log(localStorage.getItem('theme'))
+
+
+  if (n == 1) {
+    var element = document.body;
+
+    element.classList.toggle("light-mode");
+    document.getElementById('footer').classList.toggle('light-footer');
+    document.getElementById('nav').classList.toggle('light-nav');
+    document.getElementById('signup').classList.toggle('signup-light');
+
+
+
+  }
+});
+
+
+$(document).ready(function () {
+  const checkbox = document.getElementById('checkbox');
+
+  checkbox.addEventListener('change', () => {
 
 
 
 
-  window.location.reload();
 
-})
+    document.body.classList.toggle('light-mode');
+    document.getElementById('footer').classList.toggle('light-footer');
+    document.getElementById('nav').classList.toggle('light-nav');
+
+
+    // document.reload();
+    if (document.getElementById('signup') != null) {
+      classList.toggle('signup-light');
+    }
+
+    if (n == 0) {
+      n = 1;
+      localStorage.setItem('theme', n);
+    }
+    else {
+      n = 0;
+      localStorage.setItem('theme', n);
+    }
+    // console.log(localStorage.getItem('theme'))
+
+
+
+
+    window.location.reload();
+
+  })
 
 
 
@@ -105,12 +115,12 @@ checkbox.addEventListener('change', ()=>{
 
 
 // to stop the browser from resubmit
-if ( window.history.replaceState ) {
-  window.history.replaceState( null, null, window.location.href );
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href);
 }
 
 elements = document.getElementsByName("fadeOut")
 
-setTimeout(function() {
+setTimeout(function () {
   $('div[name=fadeOut]').fadeOut('fast');
 }, 20000);

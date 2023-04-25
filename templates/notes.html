@@ -19,17 +19,19 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
 <style>
-.y{
-  display: flex;
-  justify-content: space-between;
-  border: 1px solid black;
-  padding:10px;
-  margin-top:1%;
-  margin-bottom: 3%;
-}
-.ql-html-textContainer{
-  color:black;
-}
+  .y {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    padding: 10px;
+    margin-top: 1%;
+    margin-bottom: 3%;
+  }
+
+  .ql-html-textContainer {
+    color: black;
+  }
+
   svg {
     filter: brightness(300%) contrast(250%);
   }
@@ -112,72 +114,70 @@ Set the font-family content used for the HTML content.
 <!-- Create the editor container -->
 
 <a href="/"> <-GO BACK</a>
-  <div class="y">
-    <div></div>
-<h1>{{file_name}}</h1>
-<div id="size">{{size}} MB / 15 MB</div>
-</div>
-<form>
-  <input name="editordata" type="hidden" id="editordata">
-  <div id="editor">
-    {{stuff | safe}}
-  </div>
-  <input class="btn btn-success" type="button" id="editor-btn" value="Save" onclick="submit_editor()">
-</form>
+    <div class="y">
+      <div></div>
+      <h1>{{file_name}}</h1>
+      <div id="size">{{size}} MB / 15 MB</div>
+    </div>
+    <form>
+      <input name="editordata" type="hidden" id="editordata">
+      <div id="editor">
+        {{stuff | safe}}
+      </div>
+      <input class="btn btn-success" type="button" id="editor-btn" value="Save" onclick="submit_editor()">
+    </form>
 
-<div class="success-box2" id="success-box" name="fadeOut">Saved</div>
-
-
-<!-- Include the Quill library -->
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
-<script src="https://unpkg.com/quill-html-edit-button@2.2.7/dist/quill.htmlEditButton.min.js"></script>
+    <div class="success-box2" id="success-box" name="fadeOut">Saved</div>
 
 
-<!-- Initialize Quill editor -->
-<script>
-
-  
-
-  let Font = Quill.import('formats/font');
-  Font.whitelist = ['times-new-roman', 'arial', 'roboto'];
-  
-  Quill.register(Font, true);
-  Quill.register("modules/htmlEditButton", htmlEditButton);
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
+    <script src="https://unpkg.com/quill-html-edit-button@2.2.7/dist/quill.htmlEditButton.min.js"></script>
 
 
+    <!-- Initialize Quill editor -->
+    <script>
+
+
+
+      let Font = Quill.import('formats/font');
+      Font.whitelist = ['times-new-roman', 'arial', 'roboto'];
+
+      Quill.register(Font, true);
+      Quill.register("modules/htmlEditButton", htmlEditButton);
 
 
 
 
-  const fontSizeArr = ['8px', '9px', '10px', '12px', '14px', '16px', '20px', '24px', '32px', '42px', '54px', '68px', '84px', '98px'];
-
-  var Size = Quill.import('attributors/style/size');
-  Size.whitelist = fontSizeArr;
-  Quill.register(Size, true);
 
 
-  var toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike', 'code', 'link'],        // toggled buttons
-    ['blockquote', 'code-block', 'image', 'video', 'formula'],
+      const fontSizeArr = ['8px', '9px', '10px', '12px', '14px', '16px', '20px', '24px', '32px', '42px', '54px', '68px', '84px', '98px'];
+
+      var Size = Quill.import('attributors/style/size');
+      Size.whitelist = fontSizeArr;
+      Quill.register(Size, true);
 
 
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-    // text direction
-
-    [{ 'size': fontSizeArr }],  // custom dropdown
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    [{ 'font': ['', 'times-new-roman', 'arial', 'roboto'] }],
-    [{ 'align': [] }],
-
-    ['clean']                                    // remove formatting button
-  ];
+      var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike', 'code', 'link'],        // toggled buttons
+        ['blockquote', 'code-block', 'image', 'video', 'formula'],
 
 
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+        // text direction
+
+        [{ 'size': fontSizeArr }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'font': ['', 'times-new-roman', 'arial', 'roboto'] }],
+        [{ 'align': [] }],
+
+        ['clean']                                    // remove formatting button
+      ];
 
 
 
@@ -185,98 +185,100 @@ Set the font-family content used for the HTML content.
 
 
 
-  var quill = new Quill('#editor', {
-    theme: 'snow',
-    modules: {
-      imageResize: {
-        displaySize: true
-      },
-      htmlEditButton: {},
-      toolbar: {
-        container: toolbarOptions,
-        handlers: {
-          image: imageHandler
+
+
+      var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+          imageResize: {
+            displaySize: true
+          },
+          htmlEditButton: {},
+          toolbar: {
+            container: toolbarOptions,
+            handlers: {
+              image: imageHandler
+            }
+          }
+        },
+      });
+
+
+      function imageHandler() {
+        var range = this.quill.getSelection();
+        var value = prompt('What is the image URL');
+        if (value) {
+          this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
         }
       }
-    },
-  });
-
-
-  function imageHandler() {
-    var range = this.quill.getSelection();
-    var value = prompt('What is the image URL');
-    if (value) {
-      this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
-    }
-  }
 
 
 
-  var n
+      var n
 
-  var o = window.location.href;
-  // console.log(o)
-  n = o.split('notes/')
-  
-  const no = n[1]
-  // console.log(no)
-  function submit_editor() {
+      var o = window.location.href;
+      // console.log(o)
+      n = o.split('notes/')
 
-   
+      const no = n[1]
+      // console.log(no)
+      function submit_editor() {
 
 
-    // console.log("clicked")
-    var about = document.querySelector('input[name=editordata]');
-    about.value = JSON.stringify(quill.getContents());
-
-    editor_data = quill.root.innerHTML
-
-    // console.log(editor_data)
-    l = "<link href='https://cdn.quilljs.com/1.3.6/quill.snow.css' rel='stylesheet'>"
-
-    editor_data = l + editor_data
 
 
-    $.ajax({
-      data: {
-        editor_data: editor_data,
-        name:'{{file_name}}'
-      },
-      type: 'POST',
-      url: '/notes'
-    })
+        // console.log("clicked")
+        var about = document.querySelector('input[name=editordata]');
+        about.value = JSON.stringify(quill.getContents());
 
-      .done(function (data) { 
-        if(data.success){
-          document.getElementById('success-box').style.display = "block"
-          document.getElementById('success-box').innerHTML = "Saved"
-          document.getElementById('size').innerHTML = data.size + ' MB / 15 MB'
+        editor_data = quill.root.innerHTML
+
+        // console.log(editor_data)
+        l = "<link href='https://cdn.quilljs.com/1.3.6/quill.snow.css' rel='stylesheet'>"
+
+        editor_data = l + editor_data
+
+
+        $.ajax({
+          data: {
+            editor_data: editor_data,
+            name: '{{file_name}}'
+          },
+          type: 'POST',
+          url: '/notes'
+        })
+
+          .done(function (data) {
+            if (data.success) {
+              document.getElementById('success-box').style.display = "block"
+              document.getElementById('success-box').innerHTML = "Saved"
+              document.getElementById('size').innerHTML = data.size + ' MB / 15 MB'
+            }
+          });
+
+      }
+
+
+
+      if (localStorage.getItem('theme') == 1) {
+        o = document.getElementsByTagName("svg")
+        g = document.getElementsByClassName("ql-picker-label")
+        for (var l = 0; l < g.length; l++) {
+          g[l].style.color = "black"
         }
-      });
-          
-  }
+        for (var i = 0; i < o.length; i++) {
+          o[i].style.filter = "brightness(100%)"
+        }
+      }
+      else {
+        for (var i = 0; i < o.length; i++) {
+          o[i].style.filter = "brightness(300%)"
+        }
+      }
 
 
 
-  if (localStorage.getItem('theme') == 1) {
-    o = document.getElementsByTagName("svg")
-    g = document.getElementsByClassName("ql-picker-label")
-    for (var l = 0; l < g.length; l++) {
-      g[l].style.color = "black"
-    }
-    for (var i = 0; i < o.length; i++) {
-      o[i].style.filter = "brightness(100%)"
-    }
-  }
-  else {
-    for (var i = 0; i < o.length; i++) {
-      o[i].style.filter = "brightness(300%)"
-    }
-  }
-
-
-
-</script>
+    </script>
 
 
 
@@ -285,8 +287,8 @@ Set the font-family content used for the HTML content.
 
 
 
-</div>
+    </div>
 
 
-{% endif %}
-{% endblock %}
+    {% endif %}
+    {% endblock %}
