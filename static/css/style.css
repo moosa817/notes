@@ -1,16 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Edu+SA+Beginner&family=Roboto+Slab&display=swap");
+
 * {
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 html,
-body{
-width:100%;
-overflow-x:hidden;
+body {
+  width: 100%;
+  overflow-x: hidden;
 }
+
 body {
   font-family: 'Roboto Slab', serif !important;
   background: #333333 !important;
@@ -19,13 +22,18 @@ body {
   transition: background 0.7s linear;
 }
 
+#holder {
+  min-height: 100%;
+  position: relative;
+}
+
 .light-mode {
   background-color: #f5f5f5 !important;
   color: #333333 !important;
 }
 
 nav {
-  width:100vw;
+  width: 100vw;
   border: 0.5vw solid #212529 !important;
 }
 
@@ -101,15 +109,15 @@ nav {
   display: flex;
   border-radius: 50px;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   padding: 5px;
   position: relative;
   -webkit-transform: scale(1.5);
-          transform: scale(1.5);
+  transform: scale(1.5);
 }
 
 .ball {
@@ -127,9 +135,9 @@ nav {
 }
 
 /*  target the elemenent after the label*/
-.checkbox:checked + .label .ball {
+.checkbox:checked+.label .ball {
   -webkit-transform: translateX(24px);
-          transform: translateX(24px);
+  transform: translateX(24px);
 }
 
 .fa-moon {
@@ -142,14 +150,14 @@ nav {
 
 #container {
   margin-top: 10rem !important;
+  padding-bottom: 400px;
 }
 
 #footer {
-  margin-top: 50px;
   width: 100%;
-  position: static;
-  bottom: 0;
-  margin-bottom: auto;
+  position: absolute;
+  bottom: 0 !important;
+  left: 0;
 }
 
 #toggle {
@@ -174,17 +182,18 @@ nav {
   color: #333333 !important;
 }
 
-.error-box{
-  background-color: #d9534f!important;
+.error-box {
+  background-color: #d9534f !important;
   text-align: center;
   border-radius: 4px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
-.success-box{
+
+.success-box {
   /* success box color */
   background-color: #4BB543;
   text-align: center;
@@ -192,22 +201,24 @@ nav {
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
-.note-toolbar{
+
+.note-toolbar {
   background-color: white !important;
 }
 
-.error{
+.error {
   display: none;
-  background-color: #d9534f!important;
+  background-color: #d9534f !important;
   text-align: center;
   border-radius: 4px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
+
 /*# sourceMappingURL=style.css.map */
