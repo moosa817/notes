@@ -23,8 +23,7 @@ def EmailToUsername(email_list):
 
     format_strings = ','.join(['%s'] * len(email_list))
     cursor.execute("SELECT username FROM notes WHERE email IN (%s)" % format_strings,
-                tuple(email_list))
-
+                   tuple(email_list))
 
     results = cursor.fetchall()
     conn.close()
@@ -42,7 +41,8 @@ def publish():
             if request.form.get("to_publish"):
                 to_publish = request.form.get("to_publish")
                 try:
-                    records.update_one({"email":session["email"],"filename":to_publish},{"$set":{"published":True}})
+                    records.update_one({"email": session["email"], "filename": to_publish}, {
+                                       "$set": {"published": True}})
                     return jsonify({"success": True})
                 except Exception as E:
                     return jsonify({"success": False})
@@ -51,23 +51,21 @@ def publish():
             if request.form.get("un_publish"):
                 un_publish = request.form.get("un_publish")
                 try:
-                    records.update_one({"email":session["email"],"filename":un_publish},{"$set":{"published":False}})
+                    records.update_one({"email": session["email"], "filename": un_publish}, {
+                                       "$set": {"published": False}})
 
                     return jsonify({"success": True})
                 except Exception as E:
                     return jsonify({"success": False})
 
-        
         verified = []
         not_verified = []
 
-        for i in records.find({"email":session["email"],"published":True}):
+        for i in records.find({"email": session["email"], "published": True}):
             verified.append(i["filename"])
 
-        for i in records.find({"email":session["email"],"published":False}):
+        for i in records.find({"email": session["email"], "published": False}):
             not_verified.append(i["filename"])
-
-
 
         published = verified
         not_published = not_verified
@@ -96,9 +94,8 @@ def public():
 
         if email:
             email = email[0]
-
-            result = records.find_one({"email":session["email"],"published":True,"filename":file_name})
-
+            result = records.find_one(
+                {"email": email, "published": True, "filename": file_name})
 
             if result:
                 filename = result["filename"]
@@ -114,7 +111,7 @@ def public():
         return redirect("/public")
 
     # normally return public.html
-    result = records.find({"published":True})
+    result = records.find({"published": True})
 
     emails = []
     filenames = []
@@ -125,12 +122,10 @@ def public():
         filenames.append(i["filename"])
         editor_data.append(i["editor_data"])
 
-    
     users = EmailToUsername(emails)
 
     if session.get("username"):
+
         return render_template("public.html", user=users, files=filenames, editor_data=editor_data, username=session["username"], email=session["email"], verified=session["verified"], pfp=session["pfp"])
     else:
-        return render_template("public.html", users=users, files=filenames, editor_data=editor_data)
-
-    return render_template("public.html")
+        return render_template("public.html", user=users, files=filenames, editor_data=editor_data)
