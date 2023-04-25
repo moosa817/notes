@@ -28,11 +28,11 @@
 
 
         <a style="text-decoration: none;" href="/public?name={{i.replace(' ','%20')}}&username={{user[loop.index-1]}}">
-            <button class="btn btn-primary">View</button>
+            <button class="btn btn-primary mb-2">View</button>
 
         </a>
 
-        <button class="btn btn-success" id="b-{{loop.index}}"
+        <button class="btn btn-success mb-2" id="b-{{loop.index}}"
             onclick="copy(`/public?name={{i.replace(' ','%20')}}&username={{user[loop.index-1]}}`,'b-{{loop.index}}')">Copy
             Url</button>
 

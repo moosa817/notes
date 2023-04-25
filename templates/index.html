@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
 
 
-{% block title %} Notes  {% endblock %}
+{% block title %} Notes {% endblock %}
 
 {% block content %}
 
 
 {% if not username %}
-<a href="/signup" class="first">Signup/Login to open your notes </a>
+<div class="text-center">
+  <div href="/signup" class="first">Write Notes With a Rich Html Editor </div>
+  <button class="btn btn-lg btn-primary">Get Started</button>
+
+  <div>
+  </div>
+</div>
 {% endif %}
 
 {% if username %}
@@ -25,8 +31,8 @@
 {% endif %}
 
 <form method="POST" class="createfile">
-    <input type="text" name="filename" placeholder="Enter your filename">
-    <input type="submit" value="Create File">    
+  <input type="text" name="filename" placeholder="Enter your filename">
+  <input type="submit" value="Create File">
 </form>
 <div class="pe">e.g, "mynotes"</div>
 
@@ -40,38 +46,42 @@
 
 
 <div class="files" id="f-{{loop.index}}">
-  
 
-  
+
+
   <p class="edits" style="display:inline;cursor:text;" id="edit-{{loop.index}}">{{i}}</p>
-  <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}" onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
-  <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')"><i class="fa-solid fa-check"></i></button>
+  <button class="edit-btn" type="submit" id="edit-button-{{loop.index}}"
+    onclick="MakeEditable('edit-{{loop.index}}')"><i class="fa-solid fa-pen"></i></button>
+  <button class="end-btn" type="submit" id="end-button-{{loop.index}}" onclick="StopEditable('edit-{{loop.index}}')"><i
+      class="fa-solid fa-check"></i></button>
 
-<div class="files-icons">
-
-
-
-<a href="/view?name={{i.replace(' ','%20')}}"><i class="fa-sharp fa-solid fa-eye"></i></a>
+  <div class="files-icons">
 
 
 
-
+    <a href="/view?name={{i.replace(' ','%20')}}"><i class="fa-sharp fa-solid fa-eye"></i></a>
 
 
 
 
-<a onclick="download_name('edit-{{loop.index}}')" data-bs-toggle="modal" data-bs-target="#exampleModal1"><i class="fa-solid fa-download"></i></a>
-<!-- Button trigger modal -->
-<a onclick="open_delete('edit-{{loop.index}}')" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  <i class="fa fa-solid fa-trash"></i>
-</a>
 
 
 
 
-<a href="/notes?name={{i.replace(' ','%20')}}"><i class="fa-sharp fa-solid fa-file-pen"></i></a>
+    <a onclick="download_name('edit-{{loop.index}}')" data-bs-toggle="modal" data-bs-target="#exampleModal1"><i
+        class="fa-solid fa-download"></i></a>
+    <!-- Button trigger modal -->
+    <a onclick="open_delete('edit-{{loop.index}}')" style="cursor:pointer;" data-bs-toggle="modal"
+      data-bs-target="#exampleModal">
+      <i class="fa fa-solid fa-trash"></i>
+    </a>
 
-</div>
+
+
+
+    <a href="/notes?name={{i.replace(' ','%20')}}"><i class="fa-sharp fa-solid fa-file-pen"></i></a>
+
+  </div>
 
 
 </div>
@@ -95,7 +105,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modal-body">
-      
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -118,8 +128,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modal-body1">
-      <button class="btn btn-lg btn-primary" onclick="DownloadHtml()">Download As HTML</button>
-      <button class="btn btn-lg btn-primary" onclick="DownloadPdf()">Download As PDF</button>
+        <button class="btn btn-lg btn-primary" onclick="DownloadHtml()">Download As HTML</button>
+        <button class="btn btn-lg btn-primary" onclick="DownloadPdf()">Download As PDF</button>
 
       </div>
       <div class="modal-footer">

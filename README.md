@@ -1,11 +1,39 @@
 <h1>Notes</h1>
-<ul>
-<li>Save Notes</li>
+https://notes.vercel.app
 
-</ul>
+Flask App which stores your notes
+notes are written in a wysiwyg html editor
 
-required stuff
-<li>Python Version 3</li>
-<li>sudo apt-get install -y libpangocairo-1.0-0<li>
-<li>sudo apt-get install -y sqlcipher</li>
-<li>pip install -r requirements.txt</li>
+
+## How to Run
+Virtualenv
+```
+
+python -m venv env
+
+source env/bin/activate 
+OR 
+./Scripts/activate
+pip install -r requirements.txt
+```
+
+
+`ENVIORNMENT VARIABLES`
+```
+host=
+user=
+passwd=
+database=
+db_pwd=
+courier_api=
+myemail=
+drop_box_id=
+drop_box_pwd=
+drop_token=
+drop_refresh=
+DEBUG=false
+
+```
+
+## Run the App
+`python app.py`
