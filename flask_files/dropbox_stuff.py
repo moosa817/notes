@@ -151,8 +151,8 @@ def SyncThings(token, email):
     # html
     for g in range(len(files)):
         path = '/Notes-html/'+files[g]+".html"
-        write_file_to_dropbox(token, path, editor_data[g])
-
+        
+        dbx.files_upload(f=editor_data[g],path=path, mode=WriteMode.overwrite)
         
         headers = {
             'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ def SyncThings(token, email):
         pdf_bytes = base64.b64decode(pdf_data)
 
         pdf_path = '/Notes-pdf/'+files[g]+".pdf"
-        write_file_to_dropbox(token, pdf_path, pdf_bytes)
+        dbx.files_upload(f=pdf_bytes,path=pdf_path, mode=WriteMode.overwrite)
 
     mytime = time.ctime()
 
