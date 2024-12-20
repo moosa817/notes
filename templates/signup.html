@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 
-{% block title %} Signup  {% endblock %}
+{% block title %} Signup {% endblock %}
 
 {% block content %}
 <div id="signup">
@@ -13,36 +13,40 @@
   {% endif %}
 
 
-<h1 class="heading1">Signup</h1>
+  <h1 class="heading1">Signup</h1>
 
-<form method="POST">
+  <form method="POST">
     <div class="mb-2">
       <label for="exampleInputEmail1" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value='{{email}}'>
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email"
+        value='{{email}}' placeholder="Enter Email">
     </div>
     <div class="mb-2">
-        <label for="exampleInputEmail1" class="form-label">Username</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username" value="{{username}}">
-      </div>
+      <label for="exampleInputEmail1" class="form-label">Username</label>
+      <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username"
+        value="{{username}}" placeholder="Enter Username">
+    </div>
     <div class="mb-2">
       <label for="exampleInputPassword1" class="form-label">Password</label>
-      <input type="password" class="form-control" id="exampleInputPassword1" name="pwd1" value="{{pwd}}">
+      <input type="password" class="form-control" id="exampleInputPassword1" name="pwd1" value="{{pwd}}"
+        placeholder="Enter Password">
     </div>
     <div class="mb-2">
-        <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+      <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
 
-        
-        <input type="password" class="form-control" id="exampleInputPassword1" name="pwd2" value="{{confirm_pwd}}">
-        <div id="passwordHelpBlock" class="form-text">
-          
-          </div>
+
+      <input type="password" class="form-control" id="exampleInputPassword1" name="pwd2" value="{{confirm_pwd}}"
+        placeholder="Confirm Password">
+      <div id="passwordHelpBlock" class="form-text">
+
       </div>
-      
-    
+    </div>
+
+
     <input type="submit" class="btn btn-primary mb-3 register" id="register" value="Signup"></input>
-    
+
   </form>
-  <span class="alr">Already have a account?  
+  <span class="alr">Already have a account?
     <a href="/login" class="link1"> Login </a></span>
 </div>
 

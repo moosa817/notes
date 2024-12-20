@@ -7,15 +7,26 @@
 
 
 {% if not username %}
-<div class="text-center">
-  <div href="/signup" class="first">Write Notes With a Rich Html Editor </div>
-  <a href="/signup">
-    <button class="btn btn-lg btn-primary">Get Started</button>
+<div class="hero-section text-center"
+  style="color: #ffffff; height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+  <div style="max-width: 600px; margin-bottom: 20px;">
+    <h1 style="font-size: 3rem; font-weight: bold;">Unleash Your Creativity</h1>
+    <p style="font-size: 1.2rem; margin-top: 10px;">Write notes effortlessly with a rich HTML editor. Simplify your life
+      and keep your ideas organized in one place.</p>
+  </div>
+  <a href="/signup" style="text-decoration: none;">
+    <button class="btn btn-lg"
+      style="padding: 15px 30px; font-size: 1.5rem; color: #ffffff; background-color: #50acf7; border: none; border-radius: 30px; cursor: pointer; transition: transform 0.3s ease;">
+      Get Started
+    </button>
   </a>
-  <div>
+  <div style="margin-top: 30px;">
+    <p style="font-size: 0.9rem;">Already have an account? <a href="/login"
+        style="color: #74f2cc; text-decoration: underline;">Log in</a></p>
   </div>
 </div>
 {% endif %}
+
 
 {% if username %}
 
